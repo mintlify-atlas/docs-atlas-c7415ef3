@@ -1,0 +1,145 @@
+{
+  "projectType": "cli-tool",
+  "projectName": "OpenSpec",
+  "projectDescription": "A spec-driven development CLI that helps AI coding assistants and developers agree on requirements before writing code.",
+  "theme": "aspen",
+  "primaryColor": "#7c7c7c",
+  "lightColor": "#050505",
+  "darkColor": "#c8c8c8",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/overview",
+              "concepts/specs",
+              "concepts/changes",
+              "concepts/artifacts",
+              "concepts/schemas"
+            ]
+          },
+          {
+            "group": "Workflows",
+            "pages": [
+              "workflows/overview",
+              "workflows/quick-path",
+              "workflows/expanded",
+              "workflows/parallel-changes"
+            ]
+          },
+          {
+            "group": "Customization",
+            "pages": [
+              "customization/project-config",
+              "customization/custom-schemas",
+              "customization/templates"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "integrations/supported-tools",
+              "integrations/multi-language"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Reference",
+        "groups": [
+          {
+            "group": "Slash Commands",
+            "pages": [
+              "reference/commands/overview",
+              "reference/commands/propose",
+              "reference/commands/explore",
+              "reference/commands/apply",
+              "reference/commands/archive",
+              "reference/commands/new",
+              "reference/commands/continue",
+              "reference/commands/ff",
+              "reference/commands/verify",
+              "reference/commands/sync",
+              "reference/commands/bulk-archive",
+              "reference/commands/onboard"
+            ]
+          },
+          {
+            "group": "CLI Commands",
+            "pages": [
+              "reference/cli/overview",
+              "reference/cli/init",
+              "reference/cli/update",
+              "reference/cli/list",
+              "reference/cli/show",
+              "reference/cli/validate",
+              "reference/cli/archive",
+              "reference/cli/status",
+              "reference/cli/schema",
+              "reference/cli/config"
+            ]
+          },
+          {
+            "group": "Resources",
+            "pages": [
+              "reference/changelog",
+              "reference/migration-guide"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Spec-driven development workflow via AI slash commands (/opsx:propose, /opsx:apply, /opsx:archive)",
+    "Delta specs that describe ADDED/MODIFIED/REMOVED requirements for brownfield development",
+    "Artifact dependency graph: proposal → specs → design → tasks → implement",
+    "Custom workflow schemas with configurable artifact sequences and templates",
+    "Support for 20+ AI coding assistants including Claude Code, Cursor, Windsurf, and GitHub Copilot",
+    "CLI commands for project setup, validation, status inspection, and archive management",
+    "Parallel change management with conflict resolution via bulk-archive",
+    "Agent-compatible JSON output mode for programmatic use"
+  ],
+  "publicApiSurface": [
+    "openspec init [path] [--tools <list>] [--force] [--profile <profile>]",
+    "openspec update [path] [--force]",
+    "openspec list [--specs|--changes] [--sort <order>] [--json]",
+    "openspec show [item-name] [--type <type>] [--json]",
+    "openspec validate [item-name] [--all] [--strict] [--json]",
+    "openspec archive [change-name] [-y] [--skip-specs] [--no-validate]",
+    "openspec status [--change <id>] [--schema <name>] [--json]",
+    "openspec instructions [artifact] [--change <id>] [--json]",
+    "openspec templates [--schema <name>] [--json]",
+    "openspec schemas [--json]",
+    "openspec schema init <name> [--artifacts <list>] [--default]",
+    "openspec schema fork <source> [name] [--force]",
+    "openspec schema validate [name] [--verbose]",
+    "openspec schema which [name] [--all]",
+    "openspec config <subcommand> (path|list|get|set|unset|reset|edit|profile)",
+    "openspec feedback <message> [--body <text>]",
+    "openspec completion <generate|install|uninstall> [shell]",
+    "openspec view",
+    "/opsx:propose [change-name-or-description]",
+    "/opsx:explore [topic]",
+    "/opsx:new [change-name] [--schema <schema-name>]",
+    "/opsx:continue [change-name]",
+    "/opsx:ff [change-name]",
+    "/opsx:apply [change-name]",
+    "/opsx:verify [change-name]",
+    "/opsx:sync [change-name]",
+    "/opsx:archive [change-name]",
+    "/opsx:bulk-archive [change-names...]",
+    "/opsx:onboard"
+  ]
+}
