@@ -1,0 +1,113 @@
+---
+title: "openspec validate"
+description: "Validate changes and specs for structural issues."
+---
+
+## Description
+
+`openspec validate` checks changes and specs against the expected schema structure, reporting errors and warnings. It can validate a single item interactively, or validate all items in bulk for use in CI pipelines.
+
+## Syntax
+
+```bash
+openspec validate [item-name] [options]
+```
+
+## Arguments
+
+<ParamField path="item-name" type="string">
+  Specific item to validate. If omitted, an interactive prompt lets you select from available items.
+</ParamField>
+
+## Options
+
+<ParamField path="--all" type="boolean">
+  Validate all changes and specs.
+</ParamField>
+
+<ParamField path="--changes" type="boolean">
+  Validate all changes.
+</ParamField>
+
+<ParamField path="--specs" type="boolean">
+  Validate all specs.
+</ParamField>
+
+<ParamField path="--type" type="string">
+  Specify the item type when the name is ambiguous. Accepts `change` or `spec`.
+</ParamField>
+
+<ParamField path="--strict" type="boolean">
+  Enable strict validation mode.
+</ParamField>
+
+<ParamField path="--json" type="boolean">
+  Output results as JSON.
+</ParamField>
+
+<ParamField path="--concurrency" type="number" default="6">
+  Maximum number of parallel validations. Defaults to `6`, or the value of the `OPENSPEC_CONCURRENCY` environment variable.
+</ParamField>
+
+<ParamField path="--no-interactive" type="boolean">
+  Disable prompts.
+</ParamField>
+
+## Examples
+
+```bash
+# Interactive validation
+openspec validate
+
+# Validate a specific change
+openspec validate add-dark-mode
+
+# Validate all changes
+openspec validate --changes
+
+# Validate everything with JSON output (for CI/scripts)
+openspec validate --all --json
+
+# Strict validation with increased parallelism
+openspec validate --all --strict --concurrency 12
+```
+
+## Output
+
+<Tabs>
+  <Tab title="Text">
+    ```
+    Validating add-dark-mode...
+      ✓ proposal.md valid
+      ✓ specs/ui/spec.md valid
+      ⚠ design.md: missing "Technical Approach" section
+
+    1 warning found
+    ```
+  </Tab>
+  <Tab title="JSON">
+    ```json
+    {
+      "version": "1.0.0",
+      "results": {
+        "changes": [
+          {
+            "name": "add-dark-mode",
+            "valid": true,
+            "warnings": ["design.md: missing 'Technical Approach' section"]
+          }
+        ]
+      },
+      "summary": {
+        "total": 1,
+        "valid": 1,
+        "invalid": 0
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+<Tip>
+  Use `--all --json` in CI pipelines to get a machine-readable report of every validation result in a single run.
+</Tip>

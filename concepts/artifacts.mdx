@@ -1,0 +1,159 @@
+---
+title: "Artifacts"
+description: "Artifacts are the documents within a change — proposal, specs, design, and tasks — that guide planning and implementation."
+---
+
+Artifacts are the documents within a change that guide the work from intent through to implementation.
+
+## The artifact flow
+
+```text
+proposal ──────► specs ──────► design ──────► tasks ──────► implement
+    │               │             │              │
+   why            what           how          steps
+ + scope        changes       approach      to take
+```
+
+Artifacts build on each other. Each artifact provides context for the next. You can always go back and refine earlier artifacts as you learn more during implementation.
+
+| Artifact | Purpose |
+|---|---|
+| `proposal.md` | The "why" and "what" — captures intent, scope, and approach |
+| `specs/` | Delta specs showing ADDED/MODIFIED/REMOVED requirements |
+| `design.md` | The "how" — technical approach and architecture decisions |
+| `tasks.md` | Implementation checklist with checkboxes |
+
+## proposal.md
+
+The proposal captures **intent**, **scope**, and **approach** at a high level.
+
+```markdown
+# Proposal: Add Dark Mode
+
+## Intent
+Users have requested a dark mode option to reduce eye strain
+during nighttime usage and match system preferences.
+
+## Scope
+In scope:
+- Theme toggle in settings
+- System preference detection
+- Persist preference in localStorage
+
+Out of scope:
+- Custom color themes (future work)
+- Per-page theme overrides
+
+## Approach
+Use CSS custom properties for theming with a React context
+for state management. Detect system preference on first load,
+allow manual override.
+```
+
+**When to update the proposal:**
+
+- Scope changes (narrowing or expanding)
+- Intent clarifies (better understanding of the problem)
+- Approach fundamentally shifts
+
+## specs/ (delta specs)
+
+Delta specs describe **what's changing** relative to the current specs in `openspec/specs/`. They live in the change's `specs/` subdirectory and mirror the domain structure of the main specs.
+
+See [Changes](/concepts/changes) for the full delta spec format and how ADDED, MODIFIED, and REMOVED sections work.
+
+## design.md
+
+The design captures **technical approach** and **architecture decisions**.
+
+````markdown
+# Design: Add Dark Mode
+
+## Technical Approach
+Theme state managed via React Context to avoid prop drilling.
+CSS custom properties enable runtime switching without class toggling.
+
+## Architecture Decisions
+
+### Decision: Context over Redux
+Using React Context for theme state because:
+- Simple binary state (light/dark)
+- No complex state transitions
+- Avoids adding Redux dependency
+
+### Decision: CSS Custom Properties
+Using CSS variables instead of CSS-in-JS because:
+- Works with existing stylesheet
+- No runtime overhead
+- Browser-native solution
+
+## Data Flow
+```
+ThemeProvider (context)
+       │
+       ▼
+ThemeToggle ◄──► localStorage
+       │
+       ▼
+CSS Variables (applied to :root)
+```
+
+## File Changes
+- `src/contexts/ThemeContext.tsx` (new)
+- `src/components/ThemeToggle.tsx` (new)
+- `src/styles/globals.css` (modified)
+````
+
+**When to update the design:**
+
+- Implementation reveals the approach won't work
+- A better solution is discovered
+- Dependencies or constraints change
+
+## tasks.md
+
+Tasks are the **implementation checklist** — concrete steps with checkboxes.
+
+```markdown
+# Tasks
+
+## 1. Theme Infrastructure
+- [ ] 1.1 Create ThemeContext with light/dark state
+- [ ] 1.2 Add CSS custom properties for colors
+- [ ] 1.3 Implement localStorage persistence
+- [ ] 1.4 Add system preference detection
+
+## 2. UI Components
+- [ ] 2.1 Create ThemeToggle component
+- [ ] 2.2 Add toggle to settings page
+- [ ] 2.3 Update Header to include quick toggle
+
+## 3. Styling
+- [ ] 3.1 Define dark theme color palette
+- [ ] 3.2 Update components to use CSS variables
+- [ ] 3.3 Test contrast ratios for accessibility
+```
+
+**Task best practices:**
+
+- Group related tasks under headings
+- Use hierarchical numbering (1.1, 1.2, etc.)
+- Keep tasks small enough to complete in one session
+- Check tasks off as you complete them
+
+## When to update each artifact
+
+<AccordionGroup>
+  <Accordion title="Updating the proposal">
+    Update when scope changes, intent becomes clearer, or the approach fundamentally shifts. The proposal is the anchor — changes here should be intentional.
+  </Accordion>
+  <Accordion title="Updating delta specs">
+    Update when requirements change during planning or review. Keep specs focused on observable behavior, not implementation details.
+  </Accordion>
+  <Accordion title="Updating the design">
+    Update when implementation reveals the chosen approach won't work, a better solution is discovered, or dependencies or constraints change.
+  </Accordion>
+  <Accordion title="Updating tasks">
+    Update continuously as you implement. Check off completed items, add newly discovered tasks, and remove tasks that turn out to be unnecessary.
+  </Accordion>
+</AccordionGroup>

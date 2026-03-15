@@ -1,0 +1,192 @@
+---
+title: "openspec schema"
+description: "Create and manage custom workflow schemas."
+---
+
+## Description
+
+The `openspec schema` command group lets you create project-local workflow schemas, fork existing schemas for customization, validate schema structure, and debug schema resolution precedence.
+
+## Subcommands
+
+<AccordionGroup>
+  <Accordion title="schema init — create a new project-local schema">
+    ### Syntax
+
+    ```bash
+    openspec schema init <name> [options]
+    ```
+
+    ### Arguments
+
+    <ParamField path="name" type="string" required>
+      Schema name in kebab-case.
+    </ParamField>
+
+    ### Options
+
+    <ParamField path="--description" type="string">
+      Human-readable description for the schema.
+    </ParamField>
+
+    <ParamField path="--artifacts" type="string" default="proposal,specs,design,tasks">
+      Comma-separated list of artifact IDs to include in the schema.
+    </ParamField>
+
+    <ParamField path="--default" type="boolean">
+      Set this schema as the project default after creation.
+    </ParamField>
+
+    <ParamField path="--no-default" type="boolean">
+      Skip the prompt asking whether to set this schema as the default.
+    </ParamField>
+
+    <ParamField path="--force" type="boolean">
+      Overwrite an existing schema with the same name.
+    </ParamField>
+
+    <ParamField path="--json" type="boolean">
+      Output result as JSON.
+    </ParamField>
+
+    ### What it creates
+
+    ```
+    openspec/schemas/<name>/
+    ├── schema.yaml           # Schema definition
+    └── templates/
+        ├── proposal.md       # Template for each artifact
+        ├── specs.md
+        ├── design.md
+        └── tasks.md
+    ```
+
+    ### Examples
+
+    ```bash
+    # Interactive schema creation
+    openspec schema init research-first
+
+    # Non-interactive with specific artifacts
+    openspec schema init rapid \
+      --description "Rapid iteration workflow" \
+      --artifacts "proposal,tasks" \
+      --default
+    ```
+  </Accordion>
+
+  <Accordion title="schema fork — copy an existing schema for customization">
+    ### Syntax
+
+    ```bash
+    openspec schema fork <source> [name] [options]
+    ```
+
+    ### Arguments
+
+    <ParamField path="source" type="string" required>
+      Name of the schema to copy.
+    </ParamField>
+
+    <ParamField path="name" type="string">
+      Name for the new schema. Defaults to `<source>-custom`.
+    </ParamField>
+
+    ### Options
+
+    <ParamField path="--force" type="boolean">
+      Overwrite an existing schema at the destination.
+    </ParamField>
+
+    <ParamField path="--json" type="boolean">
+      Output result as JSON.
+    </ParamField>
+
+    ### Examples
+
+    ```bash
+    # Fork the built-in spec-driven schema
+    openspec schema fork spec-driven my-workflow
+    ```
+  </Accordion>
+
+  <Accordion title="schema validate — validate a schema's structure and templates">
+    ### Syntax
+
+    ```bash
+    openspec schema validate [name] [options]
+    ```
+
+    ### Arguments
+
+    <ParamField path="name" type="string">
+      Schema to validate. Validates all schemas when omitted.
+    </ParamField>
+
+    ### Options
+
+    <ParamField path="--verbose" type="boolean">
+      Show detailed validation steps.
+    </ParamField>
+
+    <ParamField path="--json" type="boolean">
+      Output results as JSON.
+    </ParamField>
+
+    ### Examples
+
+    ```bash
+    # Validate a specific schema
+    openspec schema validate my-workflow
+
+    # Validate all schemas
+    openspec schema validate
+    ```
+  </Accordion>
+
+  <Accordion title="schema which — show where a schema resolves from">
+    ### Syntax
+
+    ```bash
+    openspec schema which [name] [options]
+    ```
+
+    ### Arguments
+
+    <ParamField path="name" type="string">
+      Schema name to look up.
+    </ParamField>
+
+    ### Options
+
+    <ParamField path="--all" type="boolean">
+      List all schemas with their source locations.
+    </ParamField>
+
+    <ParamField path="--json" type="boolean">
+      Output as JSON.
+    </ParamField>
+
+    ### Examples
+
+    ```bash
+    # Check where a schema comes from
+    openspec schema which spec-driven
+    ```
+
+    ### Output
+
+    ```
+    spec-driven resolves from: package
+      Source: /usr/local/lib/node_modules/@fission-ai/openspec/schemas/spec-driven
+    ```
+
+    ### Schema precedence
+
+    When multiple schemas share the same name, OpenSpec resolves them in this order:
+
+    1. **Project** — `openspec/schemas/<name>/`
+    2. **User** — `~/.local/share/openspec/schemas/<name>/`
+    3. **Package** — built-in schemas bundled with the CLI
+  </Accordion>
+</AccordionGroup>

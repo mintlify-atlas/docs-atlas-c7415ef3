@@ -1,0 +1,86 @@
+---
+title: "openspec init"
+description: "Initialize OpenSpec in your project, creating the folder structure and configuring AI tool integrations."
+---
+
+## Description
+
+`openspec init` sets up OpenSpec in your project directory. It creates the required folder structure, generates a project configuration file, and writes instruction files for whichever AI tools you select.
+
+Default behavior uses global config defaults: profile `core`, delivery `both`, workflows `propose, explore, apply, archive`.
+
+## Syntax
+
+```bash
+openspec init [path] [options]
+```
+
+## Arguments
+
+<ParamField path="path" type="string">
+  Target directory to initialize. Defaults to the current directory.
+</ParamField>
+
+## Options
+
+<ParamField path="--tools" type="string">
+  Configure AI tools non-interactively. Use `all`, `none`, or a comma-separated list of tool IDs.
+</ParamField>
+
+<ParamField path="--profile" type="string">
+  Override the global profile for this init run. Accepts `core` or `custom`.
+
+  `--profile custom` uses whatever workflows are currently selected in global config (`openspec config profile`).
+</ParamField>
+
+<ParamField path="--force" type="boolean">
+  Auto-cleanup legacy files without prompting.
+</ParamField>
+
+## Supported tool IDs
+
+Pass any of these IDs to `--tools` as a comma-separated list, or use `all` to configure every supported tool:
+
+`amazon-q`, `antigravity`, `auggie`, `claude`, `cline`, `codex`, `codebuddy`, `continue`, `costrict`, `crush`, `cursor`, `factory`, `gemini`, `github-copilot`, `iflow`, `kilocode`, `kiro`, `opencode`, `pi`, `qoder`, `qwen`, `roocode`, `trae`, `windsurf`
+
+## What it creates
+
+Running `openspec init` produces the following structure:
+
+```
+openspec/
+├── specs/              # Your specifications (source of truth)
+├── changes/            # Proposed changes
+└── config.yaml         # Project configuration
+
+.claude/skills/         # Claude Code skills (if claude selected)
+.cursor/skills/         # Cursor skills (if cursor selected)
+.cursor/commands/       # Cursor OPSX commands (if delivery includes commands)
+... (other tool configs)
+```
+
+## Examples
+
+```bash
+# Interactive initialization
+openspec init
+
+# Initialize in a specific directory
+openspec init ./my-project
+
+# Non-interactive: configure for Claude and Cursor
+openspec init --tools claude,cursor
+
+# Configure for all supported tools
+openspec init --tools all
+
+# Override profile for this run
+openspec init --profile core
+
+# Skip prompts and auto-cleanup legacy files
+openspec init --force
+```
+
+<Tip>
+  After upgrading the CLI, use `openspec update` to regenerate instruction files without reinitializing your entire project.
+</Tip>

@@ -1,0 +1,71 @@
+---
+title: "openspec archive"
+description: "Archive a completed change and merge its delta specs into the main specs directory."
+---
+
+## Description
+
+`openspec archive` finalizes a completed change. It validates the change, merges delta specs into `openspec/specs/`, and moves the change folder into an archive directory stamped with today's date.
+
+## Syntax
+
+```bash
+openspec archive [change-name] [options]
+```
+
+## Arguments
+
+<ParamField path="change-name" type="string">
+  Name of the change to archive. If omitted, an interactive prompt lets you select from active changes.
+</ParamField>
+
+## Options
+
+<ParamField path="-y, --yes" type="boolean">
+  Skip confirmation prompts. Useful for CI and scripted workflows.
+</ParamField>
+
+<ParamField path="--skip-specs" type="boolean">
+  Skip spec updates. Use this for infrastructure, tooling, or documentation-only changes that do not produce delta specs.
+</ParamField>
+
+<ParamField path="--no-validate" type="boolean">
+  Skip the validation step. Requires explicit confirmation when used interactively.
+</ParamField>
+
+## What it does
+
+<Steps>
+  <Step title="Validate the change">
+    Runs `openspec validate` against the change to ensure it is structurally sound. Skip this step with `--no-validate`.
+  </Step>
+  <Step title="Prompt for confirmation">
+    Asks you to confirm before making any permanent changes. Skip this step with `--yes`.
+  </Step>
+  <Step title="Merge delta specs">
+    Merges the change's delta specs into `openspec/specs/`. Use `--skip-specs` to omit this step for changes that don't affect specs.
+  </Step>
+  <Step title="Move change folder to archive">
+    Moves the change folder to `openspec/changes/archive/YYYY-MM-DD-<name>/`.
+  </Step>
+</Steps>
+
+## Examples
+
+```bash
+# Interactive archive
+openspec archive
+
+# Archive a specific change
+openspec archive add-dark-mode
+
+# Archive without prompts (CI/scripts)
+openspec archive add-dark-mode --yes
+
+# Archive a tooling change that doesn't affect specs
+openspec archive update-ci-config --skip-specs
+```
+
+<Warning>
+  Archiving permanently moves the change folder. Ensure the change is fully complete and all code has been merged before running this command.
+</Warning>

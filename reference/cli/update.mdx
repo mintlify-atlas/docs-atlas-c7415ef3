@@ -1,0 +1,38 @@
+---
+title: "openspec update"
+description: "Update OpenSpec instruction files after upgrading the CLI."
+---
+
+## Description
+
+`openspec update` re-generates AI tool configuration files using your current global profile, selected workflows, and delivery mode. Run this command after upgrading the CLI to keep instruction files in sync with the latest version.
+
+## Syntax
+
+```bash
+openspec update [path] [options]
+```
+
+## Arguments
+
+<ParamField path="path" type="string">
+  Target directory to update. Defaults to the current directory.
+</ParamField>
+
+## Options
+
+<ParamField path="--force" type="boolean">
+  Force update even when files are already up to date.
+</ParamField>
+
+## Examples
+
+```bash
+# Update instruction files after upgrading the package
+npm update @fission-ai/openspec
+openspec update
+```
+
+<Note>
+  `openspec update` does not change your project configuration or specs. It only regenerates the AI tool instruction files based on your current global config settings.
+</Note>

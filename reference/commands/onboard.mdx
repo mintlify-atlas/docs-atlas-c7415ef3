@@ -1,0 +1,88 @@
+---
+title: "/opsx:onboard"
+description: "Guided onboarding through the complete OpenSpec workflow. An interactive tutorial using your actual codebase."
+---
+
+## What it does
+
+`/opsx:onboard` walks you through a complete workflow cycle with narration, using your real codebase — not toy examples. It scans for a small, safe improvement opportunity, creates a change, generates artifacts, implements the work, and archives the result. Each step is explained as it happens.
+
+## Syntax
+
+```text
+/opsx:onboard
+```
+
+No arguments. The AI guides the entire session.
+
+## Phases
+
+<Steps>
+  <Step title="Welcome and codebase analysis">
+    The AI introduces the workflow and scans your codebase to understand the project.
+  </Step>
+  <Step title="Finding an improvement opportunity">
+    The AI identifies a few small, safe changes that would make good onboarding examples.
+  </Step>
+  <Step title="Creating a change">
+    Runs `/opsx:new` to scaffold the change folder.
+  </Step>
+  <Step title="Writing the proposal">
+    Creates a `proposal.md` describing the intent of the change.
+  </Step>
+  <Step title="Creating specs">
+    Generates delta specs capturing the requirements for the change.
+  </Step>
+  <Step title="Writing the design">
+    Produces a `design.md` with implementation approach and decisions.
+  </Step>
+  <Step title="Creating tasks">
+    Generates a `tasks.md` with the implementation checklist.
+  </Step>
+  <Step title="Implementing tasks">
+    Runs `/opsx:apply` to write the actual code.
+  </Step>
+  <Step title="Verifying implementation">
+    Runs `/opsx:verify` to validate the implementation against artifacts.
+  </Step>
+  <Step title="Archiving the change">
+    Runs `/opsx:archive` to finalize and move the change to the archive.
+  </Step>
+  <Step title="Summary and next steps">
+    Explains what was demonstrated and points you toward the next steps for your own work.
+  </Step>
+</Steps>
+
+## Example
+
+```text
+You: /opsx:onboard
+
+AI:  Welcome to OpenSpec!
+
+     I'll walk you through the complete workflow using your actual codebase.
+     We'll find something small to improve, create a proper change for it,
+     implement it, and archive it.
+
+     Let me scan your codebase for opportunities...
+
+     [Analyzes codebase]
+
+     I found a few things we could work on:
+     1. Add input validation to the contact form
+     2. Improve error messages in the auth flow
+     3. Add loading states to async buttons
+
+     Which interests you? (or suggest something else)
+```
+
+## Tips
+
+<Tip>
+  Onboarding takes 15–30 minutes and creates a real change you can keep or discard. It's the best way to understand how all the commands fit together before using them on your own work.
+</Tip>
+
+- Best for new users learning the workflow
+- Uses real code, not toy examples
+- Creates a real change with actual artifacts and implementation
+- The completed change can be kept as a reference or discarded

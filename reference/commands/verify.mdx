@@ -1,0 +1,71 @@
+---
+title: "/opsx:verify"
+description: "Validate that implementation matches your change artifacts. Checks completeness, correctness, and coherence."
+---
+
+## What it does
+
+`/opsx:verify` searches the codebase for evidence of implementation and validates it against your change artifacts across three dimensions. It reports issues categorized as CRITICAL, WARNING, or SUGGESTION. Verify does not block archive, but surfaces issues you may want to address before closing out a change.
+
+## Syntax
+
+```text
+/opsx:verify [change-name]
+```
+
+## Arguments
+
+<ParamField path="change-name" type="string">
+  Which change to verify. If not provided, inferred from the current conversation context.
+</ParamField>
+
+## Verification dimensions
+
+| Dimension | What it validates |
+|-----------|-------------------|
+| **Completeness** | All tasks done, all requirements implemented, scenarios covered |
+| **Correctness** | Implementation matches spec intent, edge cases handled |
+| **Coherence** | Design decisions reflected in code, patterns consistent |
+
+## Example
+
+```text
+You: /opsx:verify
+
+AI:  Verifying add-dark-mode...
+
+     COMPLETENESS
+     ✓ All 8 tasks in tasks.md are checked
+     ✓ All requirements in specs have corresponding code
+     ⚠ Scenario "System preference detection" has no test coverage
+
+     CORRECTNESS
+     ✓ Implementation matches spec intent
+     ✓ Edge cases from scenarios are handled
+     ✓ Error states match spec definitions
+
+     COHERENCE
+     ✓ Design decisions reflected in code structure
+     ✓ Naming conventions consistent with design.md
+     ⚠ Design mentions "CSS variables" but implementation uses Tailwind classes
+
+     SUMMARY
+     ─────────────────────────────
+     Critical issues: 0
+     Warnings: 2
+     Ready to archive: Yes (with warnings)
+
+     Recommendations:
+     1. Add test for system preference detection
+     2. Update design.md to reflect Tailwind usage, or refactor to use CSS variables
+```
+
+## Tips
+
+<Tip>
+  Run `/opsx:verify` before archiving to catch mismatches early. Warnings don't block archive, but they indicate potential drift between your artifacts and the implementation.
+</Tip>
+
+- Verify is particularly good for reviewing AI-generated implementation before committing
+- Can reveal drift between what was planned in artifacts and what was actually built
+- CRITICAL issues indicate significant gaps; WARNINGs indicate potential mismatches worth reviewing

@@ -1,0 +1,140 @@
+---
+title: "Multi-Language Support"
+description: "OpenSpec works with any programming language. The spec layer is language-agnostic — examples and tooling adapt to your stack."
+---
+
+OpenSpec generates all artifacts (proposals, specs, designs, tasks) in English by default. You can switch to any language by adding a single instruction to your project config.
+
+## Quick setup
+
+<Steps>
+  <Step title="Open your project config">
+    Edit `openspec/config.yaml` in your project root.
+  </Step>
+
+  <Step title="Add a language instruction to the context field">
+    Set your language in the `context` block:
+
+    ```yaml openspec/config.yaml
+    schema: spec-driven
+
+    context: |
+      Language: Portuguese (pt-BR)
+      All artifacts must be written in Brazilian Portuguese.
+
+      # Your other project context below...
+      Tech stack: TypeScript, React, Node.js
+    ```
+  </Step>
+
+  <Step title="Done">
+    All generated artifacts will now be written in your specified language.
+  </Step>
+</Steps>
+
+---
+
+## Language examples
+
+<Tabs>
+  <Tab title="Portuguese (Brazil)">
+    ```yaml
+    context: |
+      Language: Portuguese (pt-BR)
+      All artifacts must be written in Brazilian Portuguese.
+    ```
+  </Tab>
+
+  <Tab title="Spanish">
+    ```yaml
+    context: |
+      Idioma: Español
+      Todos los artefactos deben escribirse en español.
+    ```
+  </Tab>
+
+  <Tab title="Chinese (Simplified)">
+    ```yaml
+    context: |
+      语言：中文（简体）
+      所有产出物必须用简体中文撰写。
+    ```
+  </Tab>
+
+  <Tab title="Japanese">
+    ```yaml
+    context: |
+      言語：日本語
+      すべての成果物は日本語で作成してください。
+    ```
+  </Tab>
+
+  <Tab title="French">
+    ```yaml
+    context: |
+      Langue : Français
+      Tous les artefacts doivent être rédigés en français.
+    ```
+  </Tab>
+
+  <Tab title="German">
+    ```yaml
+    context: |
+      Sprache: Deutsch
+      Alle Artefakte müssen auf Deutsch verfasst werden.
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Tips
+
+### Handle technical terms
+
+Decide how to handle technical terminology. You can instruct the AI to keep specific terms in English:
+
+```yaml
+context: |
+  Language: Japanese
+  Write in Japanese, but:
+  - Keep technical terms like "API", "REST", "GraphQL" in English
+  - Code examples and file paths remain in English
+```
+
+### Combine with other context
+
+Language settings work alongside the rest of your project context — just include both in the same `context` block:
+
+```yaml openspec/config.yaml
+schema: spec-driven
+
+context: |
+  Language: Portuguese (pt-BR)
+  All artifacts must be written in Brazilian Portuguese.
+
+  Tech stack: TypeScript, React 18, Node.js 20
+  Database: PostgreSQL with Prisma ORM
+```
+
+---
+
+## Verification
+
+To confirm your language configuration is active, inspect the generated instructions for a change:
+
+```bash
+# Check the instructions — should show your language context
+openspec instructions proposal --change my-change
+
+# Output will include your language context
+```
+
+If the output includes your language instruction, all artifacts for that change will be generated in the specified language.
+
+---
+
+## Related
+
+- [Project configuration](/customization/project-config) — Full `openspec/config.yaml` reference
+- [Workflows](/workflows/overview) — How artifacts are created and when

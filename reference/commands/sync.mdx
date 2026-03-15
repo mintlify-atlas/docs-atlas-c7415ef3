@@ -1,0 +1,70 @@
+---
+title: "/opsx:sync"
+description: "Merge delta specs from a change into main specs. Optional — archive handles this automatically."
+---
+
+## What it does
+
+`/opsx:sync` reads the delta specs in a change folder, parses the ADDED/MODIFIED/REMOVED/RENAMED sections, and merges those changes into the main `openspec/specs/` directory. It does not archive the change — the change remains active after sync.
+
+<Note>
+  Sync is optional. When you run `/opsx:archive`, it will prompt you to sync if the delta specs haven't been merged yet. Most users will never need to call `/opsx:sync` directly.
+</Note>
+
+## Syntax
+
+```text
+/opsx:sync [change-name]
+```
+
+## Arguments
+
+<ParamField path="change-name" type="string">
+  Which change to sync. If not provided, inferred from the current conversation context.
+</ParamField>
+
+## What it does
+
+- Reads delta specs from change folder
+- Parses ADDED/MODIFIED/REMOVED/RENAMED sections
+- Merges changes into main `openspec/specs/` directory
+- Preserves existing content not mentioned in delta
+- Does not archive the change (remains active)
+
+## Example
+
+```text
+You: /opsx:sync
+
+AI:  Syncing add-dark-mode delta specs...
+
+     Reading: openspec/changes/add-dark-mode/specs/ui/spec.md
+     Target:  openspec/specs/ui/spec.md
+
+     Changes to apply:
+     ✓ ADDED: Theme Selection requirement (2 scenarios)
+     ✓ ADDED: Accessibility requirement (1 scenario)
+
+     Merging...
+     ✓ openspec/specs/ui/spec.md updated
+
+     Change remains active. Run /opsx:archive when ready to complete.
+```
+
+## When to use sync manually
+
+| Scenario | Use sync? |
+|----------|-----------|
+| Long-running change, want specs in main before archiving | Yes |
+| Multiple parallel changes need the updated base specs | Yes |
+| Want to preview or review the merge separately | Yes |
+| Quick change, going straight to archive | No (archive handles it) |
+
+## Tips
+
+<Tip>
+  Sync is intelligent, not copy-paste. It can add scenarios to existing requirements without duplicating content. The change stays active after sync — you still need to run `/opsx:archive` to finalize.
+</Tip>
+
+- Most users will never need to call this directly — archive prompts if needed
+- Useful for long-running changes where you want updated specs available to other changes before archiving

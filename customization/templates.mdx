@@ -1,0 +1,137 @@
+---
+title: "Templates"
+description: "Customize the markdown templates that guide AI when creating proposal, specs, design, and task artifacts."
+---
+
+Templates are markdown files that guide the AI when creating artifacts. When OpenSpec generates a proposal, spec, design, or tasks document, it injects the corresponding template directly into the AI prompt.
+
+## Template location
+
+Each schema has its own `templates/` directory:
+
+```text
+openspec/schemas/<name>/
+├── schema.yaml
+└── templates/
+    ├── proposal.md
+    ├── spec.md
+    ├── design.md
+    └── tasks.md
+```
+
+Each artifact in `schema.yaml` references its template by filename via the `template` field. The AI receives the template content and uses it as the structure for the generated document.
+
+## Template format
+
+Templates use standard markdown with HTML comments to provide guidance to the AI:
+
+```markdown
+<!-- templates/proposal.md -->
+## Why
+
+<!-- Explain the motivation for this change. What problem does this solve? -->
+
+## What Changes
+
+<!-- Describe what will change. Be specific about new capabilities or modifications. -->
+
+## Impact
+
+<!-- Affected code, APIs, dependencies, systems -->
+```
+
+Templates can include:
+- **Section headers** the AI should fill in
+- **HTML comments** with guidance for the AI on tone, content, and scope
+- **Example formats** showing the expected structure for that section
+
+<Tip>
+HTML comments are invisible in the rendered output but are read by the AI during generation. Use them to set expectations about depth, format, and content — for example, "List each affected service as a bullet point" or "Keep this section under 100 words".
+</Tip>
+
+## Viewing current template paths
+
+To see which template files are being used for each artifact in a schema:
+
+```bash
+# Show template paths for the default schema
+openspec templates
+
+# Show templates for a specific schema
+openspec templates --schema my-workflow
+
+# JSON output for programmatic use
+openspec templates --json
+```
+
+Example output:
+
+```text
+Schema: spec-driven
+
+Templates:
+  proposal  → ~/.openspec/schemas/spec-driven/templates/proposal.md
+  specs     → ~/.openspec/schemas/spec-driven/templates/specs.md
+  design    → ~/.openspec/schemas/spec-driven/templates/design.md
+  tasks     → ~/.openspec/schemas/spec-driven/templates/tasks.md
+```
+
+## Editing templates
+
+Built-in templates (from the package) are read-only. To get editable copies, fork the schema first:
+
+```bash
+openspec schema fork spec-driven my-workflow
+```
+
+This copies the schema and all its templates to `openspec/schemas/my-workflow/templates/`, where you can edit them freely. Changes are version-controlled with your project.
+
+<Warning>
+After editing a template, run `openspec schema validate my-workflow` to confirm all referenced templates still exist and the schema is structurally valid.
+</Warning>
+
+## Template writing tips
+
+<AccordionGroup>
+  <Accordion title="Section headers set the document structure">
+    The AI will generate content for each `##` or `###` heading in the template. Add, remove, or rename headings to match the structure your team expects in that artifact type.
+
+    For example, if your proposals always need a "Rollback Plan" section, add it to `proposal.md` as a heading with a guiding comment:
+
+    ```markdown
+    ## Rollback Plan
+
+    <!-- Describe how to revert this change if it causes issues in production. -->
+    ```
+  </Accordion>
+
+  <Accordion title="Comments guide tone and content depth">
+    HTML comments shape how the AI interprets each section. Be specific:
+
+    ```markdown
+    ## Impact
+
+    <!-- List each affected service, API endpoint, or database table.
+         Include both direct changes and downstream dependencies.
+         Use bullet points. -->
+    ```
+
+    Vague comments produce vague output. The more precise your guidance, the more consistent your artifacts.
+  </Accordion>
+
+  <Accordion title="Example formats set expected structure">
+    For sections with a specific format (like task checklists or scenario tables), include an inline example in the template:
+
+    ```markdown
+    ## Tasks
+
+    <!-- Use hierarchical numbering. Example:
+    ## 1. Group name
+    - [ ] 1.1 First task
+    - [ ] 1.2 Second task
+    -->
+    ```
+
+    The AI will follow the example format when generating content for that section.
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,51 @@
+---
+title: "/opsx:propose"
+description: "Create a new change and generate planning artifacts in one step. The default start command in the core profile."
+---
+
+## What it does
+
+`/opsx:propose` is the fastest way to go from idea to implementation-ready. It creates a new change folder and generates all planning artifacts needed before implementation — in a single command. This is the default start command in the `core` profile.
+
+For step-by-step artifact control, enable expanded workflows and use `/opsx:new` combined with `/opsx:continue` or `/opsx:ff`.
+
+## Syntax
+
+```text
+/opsx:propose [change-name-or-description]
+```
+
+## Arguments
+
+<ParamField path="change-name-or-description" type="string">
+  Kebab-case name or plain-language change description. If not provided, the AI will prompt you for one.
+</ParamField>
+
+## What it creates
+
+- Creates `openspec/changes/<change-name>/`
+- Generates artifacts needed before implementation (for `spec-driven`: proposal, specs, design, tasks)
+- Stops when the change is ready for `/opsx:apply`
+
+## Example
+
+```text
+You: /opsx:propose add-dark-mode
+
+AI:  Created openspec/changes/add-dark-mode/
+     ✓ proposal.md
+     ✓ specs/ui/spec.md
+     ✓ design.md
+     ✓ tasks.md
+     Ready for implementation. Run /opsx:apply.
+```
+
+## Tips
+
+<Tip>
+  Use `/opsx:propose` for the fastest end-to-end path. If you want to review each artifact before proceeding, enable expanded workflows and use `/opsx:new` + `/opsx:continue` instead.
+</Tip>
+
+- Pass a descriptive name or description to get better-targeted artifacts
+- The generated `tasks.md` is what `/opsx:apply` works from
+- You can edit any artifact before running `/opsx:apply`

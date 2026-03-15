@@ -1,0 +1,117 @@
+---
+title: "Project Configuration"
+description: "Use openspec/config.yaml to set defaults, inject tech stack context, and add per-artifact rules for your team."
+---
+
+The `openspec/config.yaml` file is the easiest way to customize OpenSpec for your team. It gives you three capabilities:
+
+<CardGroup cols={3}>
+  <Card title="Default schema" icon="diagram-project">
+    Skip `--schema` on every command by setting a project-wide default.
+  </Card>
+  <Card title="Context injection" icon="circle-info">
+    Give the AI your tech stack, conventions, and team norms once — it applies to every artifact.
+  </Card>
+  <Card title="Per-artifact rules" icon="list-check">
+    Add custom rules that apply only when generating a specific artifact type.
+  </Card>
+</CardGroup>
+
+## Quick setup
+
+Run the interactive setup wizard:
+
+```bash
+openspec init
+```
+
+This walks you through creating a config interactively. Or create `openspec/config.yaml` manually:
+
+```yaml
+# openspec/config.yaml
+schema: spec-driven
+
+context: |
+  Tech stack: TypeScript, React, Node.js, PostgreSQL
+  API style: RESTful, documented in docs/api.md
+  Testing: Jest + React Testing Library
+  We value backwards compatibility for all public APIs
+
+rules:
+  proposal:
+    - Include rollback plan
+    - Identify affected teams
+  specs:
+    - Use Given/When/Then format
+    - Reference existing patterns before inventing new ones
+```
+
+## How context injection works
+
+When generating any artifact, your `context` and applicable `rules` are injected into the AI prompt as XML blocks:
+
+```xml
+<context>
+Tech stack: TypeScript, React, Node.js, PostgreSQL
+...
+</context>
+
+<rules>
+- Include rollback plan
+- Identify affected teams
+</rules>
+
+<template>
+[Schema's built-in template]
+</template>
+```
+
+<Note>
+**Context** appears in ALL artifacts. **Rules** ONLY appear for the matching artifact — a rule under `proposal` will not be injected when generating `specs` or `tasks`.
+</Note>
+
+## Schema resolution order
+
+When OpenSpec needs a schema, it checks in this order:
+
+1. CLI flag: `--schema <name>`
+2. Change metadata (`.openspec.yaml` in the change folder)
+3. Project config (`openspec/config.yaml`)
+4. Default (`spec-driven`)
+
+Setting a schema in `config.yaml` means you can omit `--schema` on every command:
+
+```bash
+# Without config
+openspec new change my-feature --schema spec-driven
+
+# With config — schema is automatic
+openspec new change my-feature
+```
+
+## Practical example: TypeScript/React/PostgreSQL team
+
+A complete config for a TypeScript team using React on the frontend and PostgreSQL on the backend:
+
+```yaml
+# openspec/config.yaml
+schema: spec-driven
+
+context: |
+  Tech stack: TypeScript, React, Node.js, PostgreSQL
+  API style: RESTful, documented in docs/api.md
+  Testing: Jest + React Testing Library
+  We value backwards compatibility for all public APIs
+
+rules:
+  proposal:
+    - Include rollback plan
+    - Identify affected teams
+  specs:
+    - Use Given/When/Then format
+    - Reference existing patterns before inventing new ones
+```
+
+<Tip>
+Keep `context` focused on facts the AI can act on: tech stack, naming conventions, testing practices, and constraints. Avoid vague guidance — specific context produces more consistent artifacts.
+</Tip>

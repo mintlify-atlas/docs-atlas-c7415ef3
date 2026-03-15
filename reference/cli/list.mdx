@@ -1,0 +1,64 @@
+---
+title: "openspec list"
+description: "List changes or specs in your project."
+---
+
+## Description
+
+`openspec list` displays all active changes or specs in your project. By default it lists changes, sorted by most recent. Use `--json` to get structured output suitable for scripts and AI agents.
+
+## Syntax
+
+```bash
+openspec list [options]
+```
+
+## Options
+
+<ParamField path="--changes" type="boolean">
+  List changes (default behavior).
+</ParamField>
+
+<ParamField path="--specs" type="boolean">
+  List specs instead of changes.
+</ParamField>
+
+<ParamField path="--sort" type="string" default="recent">
+  Sort order. Accepts `recent` (default) or `name`.
+</ParamField>
+
+<ParamField path="--json" type="boolean">
+  Output results as JSON for programmatic use.
+</ParamField>
+
+## Examples
+
+```bash
+# List all active changes
+openspec list
+
+# List all specs
+openspec list --specs
+
+# JSON output for scripts
+openspec list --json
+```
+
+## Output
+
+<Tabs>
+  <Tab title="Text">
+    ```
+    Active changes:
+      add-dark-mode     UI theme switching support
+      fix-login-bug     Session timeout handling
+    ```
+  </Tab>
+  <Tab title="JSON">
+    Pass `--json` to receive a structured response suitable for parsing by AI agents or scripts.
+
+    ```bash
+    openspec list --json
+    ```
+  </Tab>
+</Tabs>

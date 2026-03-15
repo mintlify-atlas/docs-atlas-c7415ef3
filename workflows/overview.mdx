@@ -1,0 +1,94 @@
+---
+title: "Workflow Overview"
+description: "Actions, not phases. OpenSpec workflows are fluid — work on what makes sense, in the order that makes sense."
+---
+
+## Philosophy: actions, not phases
+
+Traditional workflows force you through phases: planning, then implementation, then done. But real work doesn't fit neatly into boxes.
+
+OpenSpec takes a different approach:
+
+```text
+Traditional (phase-locked):
+
+  PLANNING ────────► IMPLEMENTING ────────► DONE
+      │                    │
+      │   "Can't go back"  │
+      └────────────────────┘
+
+OPSX (fluid actions):
+
+  proposal ──► specs ──► design ──► tasks ──► implement
+```
+
+Two key principles guide every workflow:
+
+- **Actions, not phases** — Commands are things you can do, not stages you're stuck in.
+- **Dependencies are enablers** — They show what's possible, not what's required next.
+
+## Two modes
+
+<Columns cols={2}>
+  <Card title="Quick Path (core profile)" icon="bolt" href="/workflows/quick-path">
+    The default. Three commands from idea to implementation: `/opsx:propose` → `/opsx:apply` → `/opsx:archive`.
+  </Card>
+  <Card title="Expanded Workflow" icon="sliders" href="/workflows/expanded">
+    Fine-grained artifact control with `/opsx:new`, `/opsx:continue`, `/opsx:ff`, `/opsx:verify`, and more.
+  </Card>
+</Columns>
+
+### Default Quick Path (`core` profile)
+
+New installs default to `core`, which provides:
+
+- `/opsx:propose`
+- `/opsx:explore`
+- `/opsx:apply`
+- `/opsx:archive`
+
+```text
+/opsx:propose ──► /opsx:apply ──► /opsx:archive
+```
+
+### Expanded workflow (custom selection)
+
+If you want explicit scaffold-and-build commands — `/opsx:new`, `/opsx:continue`, `/opsx:ff`, `/opsx:verify`, `/opsx:sync`, `/opsx:bulk-archive`, `/opsx:onboard` — enable them with:
+
+```bash
+openspec config profile
+openspec update
+```
+
+## Command quick reference
+
+| Command | Purpose | When to use |
+|---------|---------|-------------|
+| `/opsx:propose` | Create change + planning artifacts | Fast default path (`core` profile) |
+| `/opsx:explore` | Think through ideas | Unclear requirements, investigation |
+| `/opsx:new` | Start a change scaffold | Expanded mode, explicit artifact control |
+| `/opsx:continue` | Create next artifact | Expanded mode, step-by-step artifact creation |
+| `/opsx:ff` | Create all planning artifacts | Expanded mode, clear scope |
+| `/opsx:apply` | Implement tasks | Ready to write code |
+| `/opsx:verify` | Validate implementation | Expanded mode, before archiving |
+| `/opsx:sync` | Merge delta specs | Expanded mode, optional |
+| `/opsx:archive` | Complete the change | All work finished |
+| `/opsx:bulk-archive` | Archive multiple changes | Expanded mode, parallel work |
+
+<Note>
+  OPSX workflows are driven by schemas that define artifact sequences. See [Customization](/customization) for details on creating custom schemas.
+</Note>
+
+## Workflow pattern pages
+
+<CardGroup cols={2}>
+  <Card title="Quick Path" icon="bolt" href="/workflows/quick-path">
+    The core profile flow: propose, apply, archive. Get from idea to implementation in three commands.
+  </Card>
+  <Card title="Expanded Workflow" icon="sliders" href="/workflows/expanded">
+    Fine-grained artifact control, verification, and sync commands for complex changes.
+  </Card>
+  <Card title="Parallel Changes" icon="code-branch" href="/workflows/parallel-changes">
+    Work on multiple changes simultaneously and use bulk-archive to close them all at once.
+  </Card>
+</CardGroup>

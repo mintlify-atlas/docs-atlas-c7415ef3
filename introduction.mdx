@@ -1,0 +1,74 @@
+---
+title: "Introduction"
+description: "Spec-driven development for AI coding assistants. Agree on what to build before any code is written."
+---
+
+OpenSpec is a lightweight spec layer for AI-assisted development. It gives you and your AI coding assistant a structured way to agree on requirements, design, and tasks before implementation begins — so you get predictable results instead of vague prompts and unpredictable code.
+
+## Why OpenSpec?
+
+AI coding assistants are powerful but unpredictable when requirements live only in chat history. OpenSpec adds a spec layer that sits between your ideas and your code:
+
+<CardGroup cols={2}>
+  <Card title="Agree before you build" icon="handshake">
+    Human and AI align on specs before any code gets written. No more ambiguous prompts leading to wrong implementations.
+  </Card>
+  <Card title="Stay organized" icon="folder-open">
+    Each change gets its own folder with a proposal, specs, design, and tasks. Everything is traceable.
+  </Card>
+  <Card title="Work fluidly" icon="arrows-rotate">
+    Update any artifact at any time. No rigid phase gates — iterate as you learn.
+  </Card>
+  <Card title="Use your tools" icon="wrench">
+    Works with 20+ AI assistants via slash commands, including Claude Code, Cursor, Windsurf, and GitHub Copilot.
+  </Card>
+</CardGroup>
+
+## How it works
+
+OpenSpec introduces a simple workflow driven by slash commands in your AI assistant's chat interface:
+
+```text
+/opsx:propose add-dark-mode   →  Creates proposal, specs, design, tasks
+/opsx:apply                   →  AI implements the tasks
+/opsx:archive                 →  Merges specs, preserves history
+```
+
+Each "change" is a folder containing planning artifacts that guide both you and the AI:
+
+```
+openspec/changes/add-dark-mode/
+├── proposal.md     # Why and what
+├── specs/          # Delta requirements (ADDED/MODIFIED/REMOVED)
+├── design.md       # How (technical approach)
+└── tasks.md        # Implementation checklist
+```
+
+When you archive a change, its delta specs merge into your main `openspec/specs/` directory — building a living specification of your system over time.
+
+## Philosophy
+
+```text
+→ fluid not rigid
+→ iterative not waterfall
+→ easy not complex
+→ built for brownfield not just greenfield
+→ scalable from personal projects to enterprises
+```
+
+## Get started
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/installation">
+    Install OpenSpec via npm, pnpm, yarn, bun, or Nix
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Initialize your project and run your first change in minutes
+  </Card>
+  <Card title="Core Concepts" icon="book" href="/concepts/overview">
+    Understand specs, changes, artifacts, and schemas
+  </Card>
+  <Card title="Command Reference" icon="terminal" href="/reference/commands/overview">
+    Full reference for all slash commands and CLI commands
+  </Card>
+</CardGroup>

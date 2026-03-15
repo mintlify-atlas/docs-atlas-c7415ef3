@@ -1,0 +1,65 @@
+---
+title: "/opsx:new"
+description: "Start a new change scaffold. Creates the change folder and waits for you to generate artifacts."
+---
+
+## What it does
+
+`/opsx:new` creates the change folder and metadata file, then waits for you to generate artifacts using `/opsx:continue` (one at a time) or `/opsx:ff` (all at once). It is the starting point for the expanded workflow.
+
+<Note>
+  This command is part of the expanded workflow set and is not included in the default `core` profile. To enable it, run `openspec config profile` and select workflows, then run `openspec update`.
+</Note>
+
+## Syntax
+
+```text
+/opsx:new [change-name] [--schema <schema-name>]
+```
+
+## Arguments
+
+<ParamField path="change-name" type="string">
+  Name for the change folder. Prompted if not provided. Use kebab-case descriptive names.
+</ParamField>
+
+## Options
+
+<ParamField path="--schema" type="string">
+  Workflow schema to use. Defaults to the value in project config or `spec-driven` if not set.
+</ParamField>
+
+## What it creates
+
+```text
+openspec/changes/<change-name>/
+└── .openspec.yaml    # Change metadata (schema, created date)
+```
+
+## Example
+
+```text
+You: /opsx:new add-dark-mode
+
+AI:  Created openspec/changes/add-dark-mode/
+     Schema: spec-driven
+
+     Ready to create: proposal
+     Use /opsx:continue to create it, or /opsx:ff to create all artifacts.
+```
+
+## Tips
+
+<Tip>
+  Use descriptive, specific names for your changes. Good names make `openspec list` useful over time.
+</Tip>
+
+| Good names | Avoid |
+|------------|-------|
+| `add-dark-mode` | `feature-1` |
+| `fix-login-redirect` | `update` |
+| `optimize-product-query` | `changes` |
+| `implement-2fa` | `wip` |
+
+- Schema can also be set in project config (`openspec/config.yaml`)
+- After creating the scaffold, use `/opsx:ff` if you have a clear picture of the work, or `/opsx:continue` to build artifacts one at a time

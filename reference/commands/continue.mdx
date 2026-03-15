@@ -1,0 +1,69 @@
+---
+title: "/opsx:continue"
+description: "Create the next artifact in the dependency chain. Creates one artifact at a time for incremental progress."
+---
+
+## What it does
+
+`/opsx:continue` queries the artifact dependency graph for a change, identifies which artifacts are ready to create (their dependencies are satisfied), and creates the first one. Use it when you want to review and potentially edit each artifact before moving to the next.
+
+## Syntax
+
+```text
+/opsx:continue [change-name]
+```
+
+## Arguments
+
+<ParamField path="change-name" type="string">
+  Which change to continue. If not provided, inferred from the current conversation context.
+</ParamField>
+
+## What it does
+
+- Queries the artifact dependency graph
+- Shows which artifacts are ready vs blocked
+- Creates the first ready artifact
+- Reads dependency files for context
+- Shows what becomes available after creation
+
+## Example
+
+```text
+You: /opsx:continue
+
+AI:  Change: add-dark-mode
+
+     Artifact status:
+     ✓ proposal    (done)
+     ◆ specs       (ready)
+     ◆ design      (ready)
+     ○ tasks       (blocked - needs: specs)
+
+     Creating specs...
+
+     [Reads proposal.md, creates specs based on requirements]
+
+     ✓ Created openspec/changes/add-dark-mode/specs/ui/spec.md
+
+     Now available: tasks
+     Run /opsx:continue to create the next artifact.
+```
+
+## Tips
+
+<Tip>
+  Use `/opsx:continue` when you want to review and edit each artifact before proceeding. Use `/opsx:ff` when you have a clear picture and want to move faster.
+</Tip>
+
+| Situation | Use |
+|-----------|-----|
+| Clear requirements, ready to build | `/opsx:ff` |
+| Exploring, want to review each step | `/opsx:continue` |
+| Want to iterate on proposal before specs | `/opsx:continue` |
+| Time pressure, need to move fast | `/opsx:ff` |
+| Complex change, want control | `/opsx:continue` |
+
+- Multiple artifacts may become ready simultaneously after a single creation
+- You can edit created artifacts before running `/opsx:continue` again
+- Good for complex changes where you want full visibility into each step

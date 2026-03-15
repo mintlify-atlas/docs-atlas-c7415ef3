@@ -1,0 +1,146 @@
+---
+title: "Specs"
+description: "Specs are the source of truth — structured requirements and scenarios describing how your system behaves."
+---
+
+Specs describe your system's behavior using structured requirements and scenarios. They live in `openspec/specs/` and represent the current agreed-upon state of how your system works.
+
+## What a spec is (and is not)
+
+A spec is a **behavior contract**, not an implementation plan.
+
+<Columns cols={2}>
+  <Card title="Include in specs" icon="check">
+    Observable behavior users or downstream systems rely on. Inputs, outputs, and error conditions. External constraints (security, privacy, reliability, compatibility). Scenarios that can be tested or explicitly validated.
+  </Card>
+  <Card title="Keep out of specs" icon="xmark">
+    Internal class or function names. Library or framework choices. Step-by-step implementation details. Detailed execution plans (those belong in `design.md` or `tasks.md`).
+  </Card>
+</Columns>
+
+<Tip>
+  Quick test: if implementation can change without changing externally visible behavior, it likely does not belong in the spec.
+</Tip>
+
+## Directory structure
+
+Organize specs by domain — logical groupings that make sense for your system:
+
+```text
+openspec/specs/
+├── auth/
+│   └── spec.md           # Authentication behavior
+├── payments/
+│   └── spec.md           # Payment processing
+├── notifications/
+│   └── spec.md           # Notification system
+└── ui/
+    └── spec.md           # UI behavior and themes
+```
+
+Common patterns for organizing domains:
+
+- **By feature area**: `auth/`, `payments/`, `search/`
+- **By component**: `api/`, `frontend/`, `workers/`
+- **By bounded context**: `ordering/`, `fulfillment/`, `inventory/`
+
+## Spec format
+
+A spec contains requirements, and each requirement has scenarios:
+
+```markdown
+# Auth Specification
+
+## Purpose
+Authentication and session management for the application.
+
+## Requirements
+
+### Requirement: User Authentication
+The system SHALL issue a JWT token upon successful login.
+
+#### Scenario: Valid credentials
+- GIVEN a user with valid credentials
+- WHEN the user submits login form
+- THEN a JWT token is returned
+- AND the user is redirected to dashboard
+
+#### Scenario: Invalid credentials
+- GIVEN invalid credentials
+- WHEN the user submits login form
+- THEN an error message is displayed
+- AND no token is issued
+
+### Requirement: Session Expiration
+The system MUST expire sessions after 30 minutes of inactivity.
+
+#### Scenario: Idle timeout
+- GIVEN an authenticated session
+- WHEN 30 minutes pass without activity
+- THEN the session is invalidated
+- AND the user must re-authenticate
+```
+
+### Key elements
+
+| Element | Purpose |
+|---|---|
+| `## Purpose` | High-level description of this spec's domain |
+| `### Requirement:` | A specific behavior the system must have |
+| `#### Scenario:` | A concrete example of the requirement in action |
+| SHALL / MUST / SHOULD | RFC 2119 keywords indicating requirement strength |
+
+### RFC 2119 keywords
+
+**Requirements** state what the system should do without specifying implementation.
+
+**Scenarios** provide concrete examples that can be verified. Good scenarios are testable (you could write an automated test for them), cover both the happy path and edge cases, and use Given/When/Then or a similar structured format.
+
+**RFC 2119 keywords** communicate intent:
+
+| Keyword | Meaning |
+|---|---|
+| MUST / SHALL | Absolute requirement |
+| SHOULD | Recommended, but exceptions exist |
+| MAY | Optional |
+
+## Progressive rigor
+
+OpenSpec avoids bureaucracy. Use the lightest level that still makes the change verifiable.
+
+<AccordionGroup>
+  <Accordion title="Lite spec (default for most changes)">
+    - Short behavior-first requirements
+    - Clear scope and non-goals
+    - A few concrete acceptance checks
+
+    Most changes should stay in Lite mode.
+  </Accordion>
+  <Accordion title="Full spec (for higher-risk changes)">
+    Reserve full specs for:
+    - Cross-team or cross-repo changes
+    - API or contract changes, migrations, security or privacy concerns
+    - Changes where ambiguity is likely to cause expensive rework
+  </Accordion>
+</AccordionGroup>
+
+## Human + agent collaboration
+
+In many teams, humans explore and agents draft artifacts. The intended loop is:
+
+<Steps>
+  <Step title="Human provides context">
+    The human supplies intent, context, and constraints.
+  </Step>
+  <Step title="Agent drafts requirements">
+    The agent converts this into behavior-first requirements and scenarios.
+  </Step>
+  <Step title="Agent separates concerns">
+    Implementation detail goes into `design.md` and `tasks.md`, not `spec.md`.
+  </Step>
+  <Step title="Validation confirms quality">
+    Structure and clarity are confirmed before implementation begins.
+  </Step>
+</Steps>
+
+This keeps specs readable for humans and consistent for agents.

@@ -1,0 +1,67 @@
+---
+title: "/opsx:bulk-archive"
+description: "Archive multiple completed changes at once. Handles spec conflicts between changes."
+---
+
+## What it does
+
+`/opsx:bulk-archive` lists all completed changes, validates each one, detects spec conflicts across changes, and archives them in chronological order. When multiple changes touch the same spec files, it resolves conflicts by inspecting what's actually implemented in the codebase.
+
+## Syntax
+
+```text
+/opsx:bulk-archive [change-names...]
+```
+
+## Arguments
+
+<ParamField path="change-names" type="string">
+  Specific changes to archive. If not provided, the AI lists all completed changes and prompts you to confirm.
+</ParamField>
+
+## What it does
+
+- Lists all completed changes
+- Validates each change before archiving
+- Detects spec conflicts across changes
+- Resolves conflicts by checking what's actually implemented
+- Archives in chronological order
+
+## Example
+
+```text
+You: /opsx:bulk-archive
+
+AI:  Found 3 completed changes:
+     - add-dark-mode (8/8 tasks complete)
+     - fix-login-bug (3/3 tasks complete)
+     - update-footer (2/2 tasks complete)
+
+     Checking for spec conflicts...
+     ⚠ add-dark-mode and update-footer both touch specs/ui/
+
+     Inspecting codebase to resolve...
+     Both changes are implemented. Will merge in chronological order:
+     1. add-dark-mode (created Jan 20)
+     2. update-footer (created Jan 22)
+
+     Archive all 3 changes?
+
+You: Yes
+
+AI:  ✓ Archived add-dark-mode
+     ✓ Archived fix-login-bug
+     ✓ Archived update-footer
+     Specs merged: add-dark-mode → update-footer
+```
+
+## Tips
+
+<Tip>
+  Bulk archive is useful after parallel work streams. Conflict resolution is agentic — the AI checks the actual codebase to determine the correct merge order rather than guessing.
+</Tip>
+
+- Changes are always archived in order of creation date
+- Conflict resolution inspects the codebase, not just metadata
+- The AI will prompt before overwriting any spec content
+- For a single change, use `/opsx:archive` instead

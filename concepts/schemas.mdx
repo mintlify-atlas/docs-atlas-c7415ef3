@@ -1,0 +1,157 @@
+---
+title: "Schemas"
+description: "Schemas define the artifact types and dependency graph for a workflow — customize to match your team's process."
+---
+
+A schema defines the artifact types in your workflow and how they depend on each other. It controls what artifacts OpenSpec creates, in what order, and what templates guide the AI when generating them.
+
+## The schema.yaml format
+
+```yaml
+# openspec/schemas/spec-driven/schema.yaml
+name: spec-driven
+artifacts:
+  - id: proposal
+    generates: proposal.md
+    requires: []              # No dependencies, can create first
+
+  - id: specs
+    generates: specs/**/*.md
+    requires: [proposal]      # Needs proposal before creating
+
+  - id: design
+    generates: design.md
+    requires: [proposal]      # Can create in parallel with specs
+
+  - id: tasks
+    generates: tasks.md
+    requires: [specs, design] # Needs both specs and design first
+```
+
+**Key fields:**
+
+| Field | Purpose |
+|---|---|
+| `id` | Unique identifier, used in commands and rules |
+| `generates` | Output filename (supports globs like `specs/**/*.md`) |
+| `template` | Template file in the schema's `templates/` directory |
+| `instruction` | AI instructions for creating this artifact |
+| `requires` | Dependencies — which artifacts must exist first |
+
+## The dependency graph
+
+Artifacts form a dependency graph that determines what can be created at each stage:
+
+```text
+                    proposal
+                   (root node)
+                       │
+         ┌─────────────┴─────────────┐
+         │                           │
+         ▼                           ▼
+      specs                       design
+   (requires:                  (requires:
+    proposal)                   proposal)
+         │                           │
+         └─────────────┬─────────────┘
+                       │
+                       ▼
+                    tasks
+                (requires:
+                specs, design)
+```
+
+<Note>
+  Dependencies are enablers, not gates. They show what's possible to create, not what you must create next. You can skip design if you don't need it. You can create specs before or after design — both depend only on proposal.
+</Note>
+
+## Built-in schema: spec-driven
+
+The `spec-driven` schema is the default workflow:
+
+```text
+proposal → specs → design → tasks → implement
+```
+
+Best for most feature work where you want to agree on specs before implementation begins.
+
+## Custom schemas
+
+Create custom schemas when the built-in schema doesn't match your team's process.
+
+<Tabs>
+  <Tab title="Fork an existing schema">
+    ```bash
+    openspec schema fork spec-driven my-workflow
+    ```
+
+    This copies the entire `spec-driven` schema to `openspec/schemas/my-workflow/` where you can edit it freely. You get a full set of templates alongside the schema definition.
+  </Tab>
+  <Tab title="Create from scratch">
+    ```bash
+    # Interactive
+    openspec schema init research-first
+
+    # Non-interactive
+    openspec schema init rapid \
+      --description "Rapid iteration workflow" \
+      --artifacts "proposal,tasks" \
+      --default
+    ```
+  </Tab>
+</Tabs>
+
+Custom schemas live in `openspec/schemas/` and are version-controlled with your code:
+
+```text
+your-project/
+├── openspec/
+│   ├── config.yaml
+│   ├── schemas/
+│   │   └── my-workflow/
+│   │       ├── schema.yaml
+│   │       └── templates/
+│   └── changes/
+└── src/
+```
+
+See [Custom schemas](/customization/custom-schemas) for a full walkthrough.
+
+## Schema resolution order
+
+When OpenSpec needs a schema, it checks in this order:
+
+<Steps>
+  <Step title="CLI flag">
+    `--schema <name>` on the command takes highest priority.
+  </Step>
+  <Step title="Change metadata">
+    `.openspec.yaml` in the change folder, if present.
+  </Step>
+  <Step title="Project config">
+    The `schema:` field in `openspec/config.yaml`.
+  </Step>
+  <Step title="Default">
+    Falls back to the built-in `spec-driven` schema.
+  </Step>
+</Steps>
+
+## Debugging schema resolution
+
+Not sure which schema is being used? Use `openspec schema which` to check:
+
+```bash
+# See where a specific schema resolves from
+openspec schema which my-workflow
+
+# List all available schemas
+openspec schema which --all
+```
+
+Output shows whether the schema is from your project, user directory, or the package:
+
+```text
+Schema: my-workflow
+Source: project
+Path: /path/to/project/openspec/schemas/my-workflow
+```

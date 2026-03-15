@@ -1,0 +1,196 @@
+---
+title: "Supported Tools"
+description: "OpenSpec works with 20+ AI coding assistants. Configure them with openspec init --tools or interactively."
+---
+
+OpenSpec configures selected AI tools using your active profile and workflow selection. When you run `openspec init`, OpenSpec installs skills, commands, or both — depending on your delivery mode.
+
+## How it works
+
+For each selected tool, OpenSpec can install:
+
+- **Skills** (if delivery includes skills): `.../skills/openspec-*/SKILL.md` — passive context loaded by the AI on every session
+- **Commands** (if delivery includes commands): tool-specific `opsx-*` command files — invokable slash commands in the chat interface
+
+### Delivery modes
+
+| Mode | What gets installed |
+|------|--------------------|
+| Skills only | `SKILL.md` files in the tool's skills directory |
+| Commands only | `opsx-*` command files in the tool's commands directory |
+| Both | Skills and commands |
+
+### Core vs. expanded workflow commands
+
+By default, OpenSpec uses the `core` profile, which installs four commands:
+
+| Command | Purpose |
+|---------|---------|
+| `/opsx:propose` | Create a change and generate planning artifacts in one step |
+| `/opsx:explore` | Think through ideas before committing to a change |
+| `/opsx:apply` | Implement tasks from the change |
+| `/opsx:archive` | Archive a completed change |
+
+To enable the expanded workflow commands (`new`, `continue`, `ff`, `verify`, `sync`, `bulk-archive`, `onboard`), run `openspec config profile`, select your workflows, then run `openspec update`.
+
+---
+
+## Tool directory reference
+
+All 24 supported tools with their skills and command path patterns:
+
+| Tool (ID) | Skills path pattern | Command path pattern |
+|-----------|---------------------|----------------------|
+| Amazon Q Developer (`amazon-q`) | `.amazonq/skills/openspec-*/SKILL.md` | `.amazonq/prompts/opsx-<id>.md` |
+| Antigravity (`antigravity`) | `.agent/skills/openspec-*/SKILL.md` | `.agent/workflows/opsx-<id>.md` |
+| Auggie (`auggie`) | `.augment/skills/openspec-*/SKILL.md` | `.augment/commands/opsx-<id>.md` |
+| Claude Code (`claude`) | `.claude/skills/openspec-*/SKILL.md` | `.claude/commands/opsx/<id>.md` |
+| Cline (`cline`) | `.cline/skills/openspec-*/SKILL.md` | `.clinerules/workflows/opsx-<id>.md` |
+| CodeBuddy (`codebuddy`) | `.codebuddy/skills/openspec-*/SKILL.md` | `.codebuddy/commands/opsx/<id>.md` |
+| Codex (`codex`) | `.codex/skills/openspec-*/SKILL.md` | `$CODEX_HOME/prompts/opsx-<id>.md`\* |
+| Continue (`continue`) | `.continue/skills/openspec-*/SKILL.md` | `.continue/prompts/opsx-<id>.prompt` |
+| CoStrict (`costrict`) | `.cospec/skills/openspec-*/SKILL.md` | `.cospec/openspec/commands/opsx-<id>.md` |
+| Crush (`crush`) | `.crush/skills/openspec-*/SKILL.md` | `.crush/commands/opsx/<id>.md` |
+| Cursor (`cursor`) | `.cursor/skills/openspec-*/SKILL.md` | `.cursor/commands/opsx-<id>.md` |
+| Factory Droid (`factory`) | `.factory/skills/openspec-*/SKILL.md` | `.factory/commands/opsx-<id>.md` |
+| Gemini CLI (`gemini`) | `.gemini/skills/openspec-*/SKILL.md` | `.gemini/commands/opsx/<id>.toml` |
+| GitHub Copilot (`github-copilot`) | `.github/skills/openspec-*/SKILL.md` | `.github/prompts/opsx-<id>.prompt.md`\*\* |
+| iFlow (`iflow`) | `.iflow/skills/openspec-*/SKILL.md` | `.iflow/commands/opsx-<id>.md` |
+| Kilo Code (`kilocode`) | `.kilocode/skills/openspec-*/SKILL.md` | `.kilocode/workflows/opsx-<id>.md` |
+| Kiro (`kiro`) | `.kiro/skills/openspec-*/SKILL.md` | `.kiro/prompts/opsx-<id>.prompt.md` |
+| OpenCode (`opencode`) | `.opencode/skills/openspec-*/SKILL.md` | `.opencode/commands/opsx-<id>.md` |
+| Pi (`pi`) | `.pi/skills/openspec-*/SKILL.md` | `.pi/prompts/opsx-<id>.md` |
+| Qoder (`qoder`) | `.qoder/skills/openspec-*/SKILL.md` | `.qoder/commands/opsx/<id>.md` |
+| Qwen Code (`qwen`) | `.qwen/skills/openspec-*/SKILL.md` | `.qwen/commands/opsx-<id>.toml` |
+| RooCode (`roocode`) | `.roo/skills/openspec-*/SKILL.md` | `.roo/commands/opsx-<id>.md` |
+| Trae (`trae`) | `.trae/skills/openspec-*/SKILL.md` | Not generated (no command adapter; use skill-based `/openspec-*` invocations) |
+| Windsurf (`windsurf`) | `.windsurf/skills/openspec-*/SKILL.md` | `.windsurf/workflows/opsx-<id>.md` |
+
+<Note>
+  \* Codex commands are installed in the global Codex home (`$CODEX_HOME/prompts/` if set, otherwise `~/.codex/prompts/`), not your project directory.
+
+  \*\* GitHub Copilot prompt files are recognized as custom slash commands in IDE extensions (VS Code, JetBrains, Visual Studio). Copilot CLI does not currently consume `.github/prompts/*.prompt.md` directly.
+</Note>
+
+---
+
+## Command syntax by tool
+
+Different AI tools use slightly different command syntax:
+
+| Tool | Syntax example |
+|------|----------------|
+| Claude Code | `/opsx:propose`, `/opsx:apply` |
+| Cursor | `/opsx-propose`, `/opsx-apply` |
+| Windsurf | `/opsx-propose`, `/opsx-apply` |
+| Copilot (IDE) | `/opsx-propose`, `/opsx-apply` |
+| Trae | `/openspec-propose`, `/openspec-apply-change` (skill-based; no `opsx-*` command files generated) |
+
+The intent is the same across tools — only how commands are surfaced differs by integration.
+
+<Warning>
+  GitHub Copilot commands (`.github/prompts/*.prompt.md`) are only available in IDE extensions (VS Code, JetBrains, Visual Studio). GitHub Copilot CLI does not currently support custom prompt files.
+</Warning>
+
+---
+
+## Non-interactive setup
+
+For CI/CD or scripted environments, pass `--tools` (and optionally `--profile`) to skip the interactive prompt:
+
+<CodeGroup>
+
+```bash Configure specific tools
+openspec init --tools claude,cursor
+```
+
+```bash Configure all supported tools
+openspec init --tools all
+```
+
+```bash Skip tool configuration
+openspec init --tools none
+```
+
+```bash Override profile for this init run
+openspec init --profile core
+```
+
+</CodeGroup>
+
+### Available tool IDs
+
+Pass any of these IDs as a comma-separated list to `--tools`:
+
+```text
+amazon-q, antigravity, auggie, claude, cline, codex, codebuddy, continue,
+costrict, crush, cursor, factory, gemini, github-copilot, iflow, kilocode,
+kiro, opencode, pi, qoder, qwen, roocode, trae, windsurf
+```
+
+---
+
+## Workflow-dependent installation
+
+OpenSpec installs workflow artifacts based on your selected workflows. Skill and command counts are profile-dependent and delivery-dependent — not fixed.
+
+<AccordionGroup>
+  <Accordion title="Core profile (default)">
+    Installs artifacts for four workflows:
+
+    - `propose`
+    - `explore`
+    - `apply`
+    - `archive`
+  </Accordion>
+
+  <Accordion title="Custom workflow selection">
+    Any subset of all workflow IDs:
+
+    - `propose`
+    - `explore`
+    - `new`
+    - `continue`
+    - `apply`
+    - `ff`
+    - `sync`
+    - `archive`
+    - `bulk-archive`
+    - `verify`
+    - `onboard`
+
+    Run `openspec config profile` to select workflows, then `openspec update` to apply.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Generated skill names
+
+When selected by your profile or workflow config, OpenSpec generates these skills:
+
+```text
+openspec-propose
+openspec-explore
+openspec-new-change
+openspec-continue-change
+openspec-apply-change
+openspec-ff-change
+openspec-sync-specs
+openspec-archive-change
+openspec-bulk-archive-change
+openspec-verify-change
+openspec-onboard
+```
+
+<Tip>
+  Skill names correspond directly to the workflows they serve. The `core` profile generates only the four skills matching its included workflows.
+</Tip>
+
+---
+
+## Related
+
+- [Commands](/reference/commands/overview) — Slash command reference and behavior
+- [CLI reference](/reference/cli/overview) — `init`, `update`, and other terminal commands
+- [Multi-language support](/integrations/multi-language) — Generate artifacts in languages other than English

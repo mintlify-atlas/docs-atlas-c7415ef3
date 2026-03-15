@@ -1,0 +1,190 @@
+---
+title: "Quick Path (Core Profile)"
+description: "The default workflow: /opsx:propose → /opsx:apply → /opsx:archive. Get from idea to implementation in three commands."
+---
+
+The `core` profile is the default for new OpenSpec installs. It keeps the workflow short and requires no additional configuration.
+
+## What the core profile includes
+
+The `core` profile provides four commands:
+
+| Command | Purpose |
+|---------|---------|
+| `/opsx:propose` | Create a change and generate all planning artifacts in one step |
+| `/opsx:explore` | Think through ideas before committing to a change |
+| `/opsx:apply` | Implement tasks from the change |
+| `/opsx:archive` | Archive a completed change |
+
+The typical flow is:
+
+```text
+/opsx:propose ──► /opsx:apply ──► /opsx:archive
+```
+
+## Step-by-step: adding dark mode
+
+<Steps>
+  <Step title="Propose the change">
+    Run `/opsx:propose` with a descriptive change name. OpenSpec creates the change folder and generates all planning artifacts before stopping at implementation.
+
+    ```text
+    You: /opsx:propose add-dark-mode
+
+    AI:  Created openspec/changes/add-dark-mode/
+         ✓ proposal.md — why we're doing this, what's changing
+         ✓ specs/       — requirements and scenarios
+         ✓ design.md    — technical approach
+         ✓ tasks.md     — implementation checklist
+         Ready for implementation!
+    ```
+
+    **What gets created:**
+
+    `proposal.md` captures the intent:
+
+    ```markdown
+    # Proposal: Add Dark Mode
+
+    ## Intent
+    Users have requested a dark mode option to reduce eye strain
+    during nighttime usage.
+
+    ## Scope
+    - Add theme toggle in settings
+    - Support system preference detection
+    - Persist preference in localStorage
+
+    ## Approach
+    Use CSS custom properties for theming with a React context
+    for state management.
+    ```
+
+    `specs/ui/spec.md` contains the delta requirements:
+
+    ```markdown
+    # Delta for UI
+
+    ## ADDED Requirements
+
+    ### Requirement: Theme Selection
+    The system SHALL allow users to choose between light and dark themes.
+
+    #### Scenario: Manual toggle
+    - GIVEN a user on any page
+    - WHEN the user clicks the theme toggle
+    - THEN the theme switches immediately
+    - AND the preference persists across sessions
+
+    #### Scenario: System preference
+    - GIVEN a user with no saved preference
+    - WHEN the application loads
+    - THEN the system's preferred color scheme is used
+    ```
+
+    `tasks.md` is the implementation checklist:
+
+    ```markdown
+    # Tasks
+
+    ## 1. Theme Infrastructure
+    - [ ] 1.1 Create ThemeContext with light/dark state
+    - [ ] 1.2 Add CSS custom properties for colors
+    - [ ] 1.3 Implement localStorage persistence
+
+    ## 2. UI Components
+    - [ ] 2.1 Create ThemeToggle component
+    - [ ] 2.2 Add toggle to settings page
+    - [ ] 2.3 Update Header to include quick toggle
+
+    ## 3. Styling
+    - [ ] 3.1 Define dark theme color palette
+    - [ ] 3.2 Update components to use CSS variables
+    ```
+  </Step>
+  <Step title="Implement the change">
+    Run `/opsx:apply` to work through the task list. OpenSpec writes code, creates files, and marks tasks complete with checkboxes.
+
+    ```text
+    You: /opsx:apply
+
+    AI:  Working through tasks...
+         ✓ 1.1 Created ThemeContext with light/dark state
+         ✓ 1.2 Added CSS custom properties to globals.css
+         ✓ 1.3 Implemented localStorage persistence
+         ✓ 2.1 Created ThemeToggle component
+         ...
+         All tasks complete!
+    ```
+
+    <Tip>
+      If you discover the design needs adjustment during implementation, update the artifact and continue. Artifacts can be refined as you learn more.
+    </Tip>
+  </Step>
+  <Step title="Archive the change">
+    Run `/opsx:archive` to finalize the change. Delta specs merge into the main `openspec/specs/` directory and the change folder moves to the archive.
+
+    ```text
+    You: /opsx:archive
+
+    AI:  Archiving add-dark-mode...
+         ✓ Merged specs into openspec/specs/ui/spec.md
+         ✓ Moved to openspec/changes/archive/2025-01-24-add-dark-mode/
+         Done! Ready for the next feature.
+    ```
+
+    Your delta specs are now part of the main specs, documenting how your system works.
+  </Step>
+</Steps>
+
+## Using `/opsx:explore` before proposing
+
+When requirements are unclear or you need to investigate first, run `/opsx:explore` before committing to a change. Exploration has no structure and creates no artifacts — it's a free-form investigation.
+
+```text
+You: /opsx:explore
+
+AI:  What would you like to explore?
+
+You: How should we handle rate limiting for our API?
+
+AI:  Let me investigate your current setup and options...
+     [Researches codebase, considers patterns]
+
+     I see three approaches we could take:
+     1. Middleware-based (simple, per-endpoint)
+     2. Redis-backed (scalable, shared state)
+     3. Token bucket per user (fair, complex)
+
+     Your current stack suggests #1 or #2. What's your scale?
+```
+
+Once you have enough clarity, run `/opsx:propose` to begin the change.
+
+<Tip>
+  Use `/opsx:explore` when you're comparing multiple approaches before deciding. It can read files and search the codebase, but creates no artifacts until you're ready.
+</Tip>
+
+## Tips
+
+<AccordionGroup>
+  <Accordion title="Choosing the right model">
+    Use a capable model for artifact generation — the quality of `proposal.md`, `specs/`, `design.md`, and `tasks.md` directly affects implementation quality. Weaker models may produce incomplete task lists or vague specs.
+  </Accordion>
+  <Accordion title="Context hygiene">
+    If your AI assistant has accumulated a long conversation history before you run `/opsx:propose`, consider starting a fresh context window. Accumulated context from unrelated work can affect artifact quality.
+  </Accordion>
+  <Accordion title="Enabling expanded workflow">
+    If you want step-by-step artifact control, you can enable the expanded workflow commands with:
+
+    ```bash
+    openspec config profile
+    openspec update
+    ```
+
+    Then use `/opsx:new` + `/opsx:continue` instead of `/opsx:propose`. See [Expanded Workflow](/workflows/expanded) for details.
+  </Accordion>
+  <Accordion title="Resuming after interruption">
+    `/opsx:apply` tracks completion state in `tasks.md` checkboxes. If you're interrupted, run `/opsx:apply add-dark-mode` (with the change name) to resume where you left off.
+  </Accordion>
+</AccordionGroup>

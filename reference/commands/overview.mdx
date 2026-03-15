@@ -1,0 +1,176 @@
+---
+title: "Slash Commands"
+description: "OpenSpec slash commands are invoked in your AI assistant's chat. They drive the spec-driven development workflow."
+---
+
+## How slash commands work
+
+OpenSpec slash commands are invoked directly in your AI coding assistant's chat interface — not in a terminal. When you type a command like `/opsx:propose`, your AI tool reads the corresponding skill or prompt file that OpenSpec installed in your project and executes the workflow described there.
+
+This means commands run in the context of your AI conversation. The AI reads your codebase, creates files, and works through tasks — all driven by the command you invoke.
+
+<Note>
+  Commands must be invoked in the chat interface of a supported AI tool (Claude Code, Cursor, Windsurf, etc.). They are not terminal commands.
+</Note>
+
+## Command syntax by tool
+
+Different AI tools use slightly different syntax for invoking commands. Use the format that matches your tool:
+
+| Tool | Syntax example |
+|------|----------------|
+| Claude Code | `/opsx:propose`, `/opsx:apply` |
+| Cursor | `/opsx-propose`, `/opsx-apply` |
+| Windsurf | `/opsx-propose`, `/opsx-apply` |
+| Copilot (IDE) | `/opsx-propose`, `/opsx-apply` |
+| Trae | Skill-based invocations such as `/openspec-propose`, `/openspec-apply-change` (no generated `opsx-*` command files) |
+
+The intent is the same across tools, but how commands are surfaced differs by integration.
+
+<Note>
+  GitHub Copilot commands (`.github/prompts/*.prompt.md`) are only available in IDE extensions (VS Code, JetBrains, Visual Studio). GitHub Copilot CLI does not currently support custom prompt files.
+</Note>
+
+## Quick reference
+
+### Default quick path (`core` profile)
+
+New installs default to the `core` profile, which provides four commands covering the full development cycle:
+
+| Command | Purpose |
+|---------|---------|
+| `/opsx:propose` | Create a change and generate planning artifacts in one step |
+| `/opsx:explore` | Think through ideas before committing to a change |
+| `/opsx:apply` | Implement tasks from the change |
+| `/opsx:archive` | Archive a completed change |
+
+Typical flow:
+
+```text
+/opsx:propose ──► /opsx:apply ──► /opsx:archive
+```
+
+### Expanded workflow commands
+
+To enable the full set of commands, run `openspec config profile`, select workflows, then run `openspec update` in your project.
+
+| Command | Purpose |
+|---------|---------|
+| `/opsx:new` | Start a new change scaffold |
+| `/opsx:continue` | Create the next artifact based on dependencies |
+| `/opsx:ff` | Fast-forward: create all planning artifacts at once |
+| `/opsx:verify` | Validate implementation matches artifacts |
+| `/opsx:sync` | Merge delta specs into main specs |
+| `/opsx:bulk-archive` | Archive multiple changes at once |
+| `/opsx:onboard` | Guided tutorial through the complete workflow |
+
+```bash
+openspec config profile
+openspec update
+```
+
+## Legacy commands
+
+These commands use the older "all-at-once" workflow. They still work but OPSX commands are recommended.
+
+| Command | What it does |
+|---------|-------------|
+| `/openspec:proposal` | Create all artifacts at once (proposal, specs, design, tasks) |
+| `/openspec:apply` | Implement the change |
+| `/openspec:archive` | Archive the change |
+
+**When to use legacy commands:**
+- Existing projects using the old workflow
+- Simple changes where you don't need incremental artifact creation
+- Preference for the all-or-nothing approach
+
+Legacy changes can be continued with OPSX commands. The artifact structure is compatible.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Change not found">
+    The command couldn't identify which change to work on.
+
+    **Solutions:**
+    - Specify the change name explicitly: `/opsx:apply add-dark-mode`
+    - Check that the change folder exists: `openspec list`
+    - Verify you're in the right project directory
+  </Accordion>
+
+  <Accordion title="No artifacts ready">
+    All artifacts are either complete or blocked by missing dependencies.
+
+    **Solutions:**
+    - Run `openspec status --change <name>` to see what's blocking
+    - Check if required artifacts exist
+    - Create missing dependency artifacts first
+  </Accordion>
+
+  <Accordion title="Schema not found">
+    The specified schema doesn't exist.
+
+    **Solutions:**
+    - List available schemas: `openspec schemas`
+    - Check spelling of schema name
+    - Create the schema if it's custom: `openspec schema init <name>`
+  </Accordion>
+
+  <Accordion title="Commands not recognized">
+    The AI tool doesn't recognize OpenSpec commands.
+
+    **Solutions:**
+    - Ensure OpenSpec is initialized: `openspec init`
+    - Regenerate skills: `openspec update`
+    - Check that `.claude/skills/` directory exists (for Claude Code)
+    - Restart your AI tool to pick up new skills
+  </Accordion>
+
+  <Accordion title="Artifacts not generating properly">
+    The AI creates incomplete or incorrect artifacts.
+
+    **Solutions:**
+    - Add project context in `openspec/config.yaml`
+    - Add per-artifact rules for specific guidance
+    - Provide more detail in your change description
+    - Use `/opsx:continue` instead of `/opsx:ff` for more control
+  </Accordion>
+</AccordionGroup>
+
+## Command pages
+
+<CardGroup cols={2}>
+  <Card title="/opsx:propose" icon="circle-play" href="/reference/commands/propose">
+    Create a change and generate all planning artifacts in one step.
+  </Card>
+  <Card title="/opsx:explore" icon="magnifying-glass" href="/reference/commands/explore">
+    Think through ideas and investigate before committing to a change.
+  </Card>
+  <Card title="/opsx:apply" icon="code" href="/reference/commands/apply">
+    Implement tasks from the change, writing code and checking off items.
+  </Card>
+  <Card title="/opsx:archive" icon="box-archive" href="/reference/commands/archive">
+    Finalize a completed change and move it to the archive.
+  </Card>
+  <Card title="/opsx:verify" icon="circle-check" href="/reference/commands/verify">
+    Validate that implementation matches your change artifacts.
+  </Card>
+  <Card title="/opsx:new" icon="plus" href="/reference/commands/new">
+    Start a new change scaffold (expanded workflow).
+  </Card>
+  <Card title="/opsx:continue" icon="arrow-right" href="/reference/commands/continue">
+    Create the next artifact in the dependency chain.
+  </Card>
+  <Card title="/opsx:ff" icon="forward" href="/reference/commands/ff">
+    Fast-forward through all planning artifact creation.
+  </Card>
+  <Card title="/opsx:sync" icon="arrows-rotate" href="/reference/commands/sync">
+    Merge delta specs from a change into main specs.
+  </Card>
+  <Card title="/opsx:bulk-archive" icon="layer-group" href="/reference/commands/bulk-archive">
+    Archive multiple completed changes at once.
+  </Card>
+  <Card title="/opsx:onboard" icon="graduation-cap" href="/reference/commands/onboard">
+    Guided tutorial through the complete OpenSpec workflow.
+  </Card>
+</CardGroup>

@@ -1,122 +1,121 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "OpenSpec",
+  "theme": "aspen",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#7c7c7c",
+    "light": "#c8c8c8",
+    "dark": "#050505"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "https://media.brand.dev/ef8224ab-b767-4e62-a9ba-a124d08e333e.jpg",
+  "logo": {
+    "light": "https://media.brand.dev/ec825981-da0d-4f1e-98e2-8feca3cdf8f5.svg",
+    "dark": "https://media.brand.dev/ec825981-da0d-4f1e-98e2-8feca3cdf8f5.svg"
+  },
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/Fission-AI/OpenSpec"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/Fission-AI/OpenSpec"
+    }
+  },
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Documentation",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Get Started",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/overview",
+              "concepts/specs",
+              "concepts/changes",
+              "concepts/artifacts",
+              "concepts/schemas"
+            ]
+          },
+          {
+            "group": "Workflows",
+            "pages": [
+              "workflows/overview",
+              "workflows/quick-path",
+              "workflows/expanded",
+              "workflows/parallel-changes"
             ]
           },
           {
             "group": "Customization",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "customization/project-config",
+              "customization/custom-schemas",
+              "customization/templates"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Integrations",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "integrations/supported-tools",
+              "integrations/multi-language"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Reference",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Slash Commands",
             "pages": [
-              "api-reference/introduction"
+              "reference/commands/overview",
+              "reference/commands/propose",
+              "reference/commands/explore",
+              "reference/commands/apply",
+              "reference/commands/archive",
+              "reference/commands/new",
+              "reference/commands/continue",
+              "reference/commands/ff",
+              "reference/commands/verify",
+              "reference/commands/sync",
+              "reference/commands/bulk-archive",
+              "reference/commands/onboard"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "CLI Commands",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "reference/cli/overview",
+              "reference/cli/init",
+              "reference/cli/update",
+              "reference/cli/list",
+              "reference/cli/show",
+              "reference/cli/validate",
+              "reference/cli/archive",
+              "reference/cli/status",
+              "reference/cli/schema",
+              "reference/cli/config"
+            ]
+          },
+          {
+            "group": "Resources",
+            "pages": [
+              "reference/changelog",
+              "reference/migration-guide"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+    ]
   }
 }

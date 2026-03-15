@@ -1,0 +1,242 @@
+---
+title: "Expanded Workflow"
+description: "Gain fine-grained control over artifact creation with /opsx:new, /opsx:continue, /opsx:ff, /opsx:verify, and more."
+---
+
+The expanded workflow gives you explicit control over each step of artifact creation. Instead of generating everything in one command, you scaffold the change first, then create artifacts one at a time — or all at once.
+
+## Enabling expanded workflow
+
+Expanded workflow commands are not included in the default `core` profile. To enable them:
+
+<Steps>
+  <Step title="Select the workflows profile">
+    ```bash
+    openspec config profile
+    ```
+
+    When prompted, select the workflows you want to enable.
+  </Step>
+  <Step title="Update your project">
+    ```bash
+    openspec update
+    ```
+
+    This regenerates the skills and command files for your AI tool.
+  </Step>
+</Steps>
+
+## Expanded commands
+
+| Command | Purpose |
+|---------|---------|
+| `/opsx:new` | Start a new change scaffold |
+| `/opsx:continue` | Create the next artifact in the dependency chain |
+| `/opsx:ff` | Fast-forward: create all planning artifacts at once |
+| `/opsx:verify` | Validate implementation against artifacts |
+| `/opsx:sync` | Merge delta specs into main specs (optional) |
+| `/opsx:bulk-archive` | Archive multiple completed changes at once |
+| `/opsx:onboard` | Guided tutorial through the complete workflow |
+
+## Workflow patterns
+
+### Quick feature pattern
+
+When you know what you want to build and just need to execute:
+
+```text
+/opsx:new ──► /opsx:ff ──► /opsx:apply ──► /opsx:verify ──► /opsx:archive
+```
+
+**Example conversation:**
+
+```text
+You: /opsx:new add-logout-button
+
+AI:  Created openspec/changes/add-logout-button/
+     Ready to create: proposal
+
+You: /opsx:ff
+
+AI:  Creating all planning artifacts...
+     ✓ proposal.md
+     ✓ specs/
+     ✓ design.md
+     ✓ tasks.md
+     Ready for implementation!
+
+You: /opsx:apply
+
+AI:  Working through tasks...
+     ✓ Added logout button to header
+     ✓ Implemented session clearing
+     ✓ Added confirmation dialog
+     All tasks complete!
+
+You: /opsx:archive
+
+AI:  ✓ Merged specs
+     ✓ Archived change
+```
+
+**Best for:** Small to medium features, bug fixes, straightforward changes.
+
+### Exploratory pattern
+
+When requirements are unclear or you need to investigate first:
+
+```text
+/opsx:explore ──► /opsx:new ──► /opsx:continue ──► ... ──► /opsx:apply
+```
+
+**Example conversation:**
+
+```text
+You: /opsx:explore
+
+AI:  What would you like to explore?
+
+You: I want to improve page load performance but I'm not sure
+     where the bottlenecks are.
+
+AI:  Let me help investigate...
+     [Analyzes bundle sizes, identifies slow queries, reviews
+     component render patterns]
+
+     I found three main bottlenecks:
+     1. Large unoptimized images
+     2. Synchronous data fetching in ProductList
+     3. Re-renders from context changes
+
+     Which would you like to address first?
+
+You: Let's tackle the data fetching issue.
+
+You: /opsx:new optimize-product-list-fetching
+
+AI:  Created change. Ready to create: proposal
+
+You: /opsx:continue
+
+AI:  Creating proposal based on our exploration...
+     [Writes proposal incorporating investigation insights]
+
+     Ready to create: specs, design
+     Which would you like next?
+
+You: /opsx:continue
+
+AI:  Creating specs...
+```
+
+**Best for:** Performance optimization, debugging, architectural decisions, unclear requirements.
+
+## `/opsx:ff` vs `/opsx:continue`
+
+Both commands create artifacts, but they serve different needs:
+
+| Situation | Use |
+|-----------|-----|
+| Clear requirements, ready to build | `/opsx:ff` |
+| Exploring, want to review each step | `/opsx:continue` |
+| Want to iterate on proposal before specs | `/opsx:continue` |
+| Time pressure, need to move fast | `/opsx:ff` |
+| Complex change, want control | `/opsx:continue` |
+
+**Rule of thumb:** If you can describe the full scope upfront, use `/opsx:ff`. If you're figuring it out as you go, use `/opsx:continue`.
+
+<Note>
+  You can edit artifacts created by either command before proceeding. Creating with `/opsx:ff` doesn't lock you in.
+</Note>
+
+## `/opsx:verify` explained
+
+`/opsx:verify` validates implementation against your change artifacts across three dimensions before you archive:
+
+| Dimension | What it validates |
+|-----------|------------------|
+| **Completeness** | All tasks done, all requirements implemented, scenarios covered |
+| **Correctness** | Implementation matches spec intent, edge cases handled |
+| **Coherence** | Design decisions reflected in code, patterns consistent |
+
+**Full example output:**
+
+```text
+You: /opsx:verify
+
+AI:  Verifying add-auth...
+
+     COMPLETENESS
+     ✓ All 12 tasks in tasks.md are checked
+     ✓ All requirements in specs have corresponding code
+     ⚠ Scenario "Session timeout after inactivity" not tested
+
+     CORRECTNESS
+     ✓ Implementation matches spec intent
+     ✓ Edge cases from scenarios are handled
+     ✓ Error states match spec definitions
+
+     COHERENCE
+     ✓ Design decisions reflected in code structure
+     ✓ Naming conventions consistent with design.md
+     ⚠ Design mentions "event-driven" but implementation uses polling
+
+     SUMMARY
+     ─────────────────────────────
+     Critical issues: 0
+     Warnings: 2
+     Ready to archive: Yes (with warnings)
+
+     Recommendations:
+     1. Add test for session timeout scenario
+     2. Consider refactoring to event-driven as designed, or update design.md
+```
+
+<Note>
+  Verify won't block archive, but it surfaces issues you might want to address first. Warnings indicate potential drift between artifacts and implementation.
+</Note>
+
+## When to update vs start fresh
+
+A common question: when is updating an existing change the right call, and when should you start a new one?
+
+<Tabs>
+  <Tab title="Update the existing change">
+    - Same intent, refined execution
+    - Scope narrows (MVP first, rest later)
+    - Learning-driven corrections (codebase isn't what you expected)
+    - Design tweaks based on implementation discoveries
+  </Tab>
+  <Tab title="Start a new change">
+    - Intent fundamentally changed
+    - Scope exploded to different work entirely
+    - Original change can be marked "done" standalone
+    - Patches would confuse more than clarify
+  </Tab>
+</Tabs>
+
+```text
+                     ┌─────────────────────────────────────┐
+                     │     Is this the same work?          │
+                     └──────────────┬──────────────────────┘
+                                    │
+                 ┌──────────────────┼──────────────────┐
+                 │                  │                  │
+                 ▼                  ▼                  ▼
+          Same intent?      >50% overlap?      Can original
+          Same problem?     Same scope?        be "done" without
+                 │                  │          these changes?
+                 │                  │                  │
+       ┌────────┴────────┐  ┌──────┴──────┐   ┌───────┴───────┐
+       │                 │  │             │   │               │
+      YES               NO YES           NO  NO              YES
+       │                 │  │             │   │               │
+       ▼                 ▼  ▼             ▼   ▼               ▼
+    UPDATE            NEW  UPDATE       NEW  UPDATE          NEW
+```
+
+**Example: "Add dark mode"**
+
+- "Need to also support custom themes" → New change (scope exploded)
+- "System preference detection is harder than expected" → Update (same intent)
+- "Let's ship toggle first, add preferences later" → Update then archive, then new change

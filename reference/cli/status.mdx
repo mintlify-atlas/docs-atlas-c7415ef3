@@ -1,0 +1,74 @@
+---
+title: "openspec status"
+description: "Display artifact completion status for a change."
+---
+
+## Description
+
+`openspec status` shows which artifacts in a change are complete, which are ready to work on, and which are blocked by unmet dependencies. Both humans checking progress and AI agents determining next steps use this command.
+
+## Syntax
+
+```bash
+openspec status [options]
+```
+
+## Options
+
+<ParamField path="--change" type="string">
+  Change name to inspect. Prompts interactively if omitted.
+</ParamField>
+
+<ParamField path="--schema" type="string">
+  Schema override. Auto-detected from the change's config when not specified.
+</ParamField>
+
+<ParamField path="--json" type="boolean">
+  Output as JSON for agent consumption.
+</ParamField>
+
+## Examples
+
+```bash
+# Interactive status check
+openspec status
+
+# Status for a specific change
+openspec status --change add-dark-mode
+
+# JSON for agent use
+openspec status --change add-dark-mode --json
+```
+
+## Output
+
+<Tabs>
+  <Tab title="Text">
+    ```
+    Change: add-dark-mode
+    Schema: spec-driven
+    Progress: 2/4 artifacts complete
+
+    [x] proposal
+    [ ] design
+    [x] specs
+    [-] tasks (blocked by: design)
+    ```
+  </Tab>
+  <Tab title="JSON">
+    ```json
+    {
+      "changeName": "add-dark-mode",
+      "schemaName": "spec-driven",
+      "isComplete": false,
+      "applyRequires": ["tasks"],
+      "artifacts": [
+        {"id": "proposal", "outputPath": "proposal.md", "status": "done"},
+        {"id": "design", "outputPath": "design.md", "status": "ready"},
+        {"id": "specs", "outputPath": "specs/**/*.md", "status": "done"},
+        {"id": "tasks", "outputPath": "tasks.md", "status": "blocked", "missingDeps": ["design"]}
+      ]
+    }
+    ```
+  </Tab>
+</Tabs>

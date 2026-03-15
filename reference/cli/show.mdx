@@ -1,0 +1,70 @@
+---
+title: "openspec show"
+description: "Display details of a change or spec."
+---
+
+## Description
+
+`openspec show` prints the full content and metadata for a named change or spec. If you omit the item name, it prompts you to select one interactively. Use `--json` to get structured output for agent consumption.
+
+## Syntax
+
+```bash
+openspec show [item-name] [options]
+```
+
+## Arguments
+
+<ParamField path="item-name" type="string">
+  Name of the change or spec to display. If omitted, an interactive prompt lets you select from available items.
+</ParamField>
+
+## Options
+
+<ParamField path="--type" type="string">
+  Specify the item type when the name is ambiguous. Accepts `change` or `spec`. Auto-detected when unambiguous.
+</ParamField>
+
+<ParamField path="--json" type="boolean">
+  Output as JSON.
+</ParamField>
+
+<ParamField path="--no-interactive" type="boolean">
+  Disable prompts. Requires providing `item-name` directly.
+</ParamField>
+
+### Change-specific options
+
+<ParamField path="--deltas-only" type="boolean">
+  Show only delta specs. JSON mode only.
+</ParamField>
+
+### Spec-specific options
+
+<ParamField path="--requirements" type="boolean">
+  Show only requirements, excluding scenarios. JSON mode only.
+</ParamField>
+
+<ParamField path="--no-scenarios" type="boolean">
+  Exclude scenario content. JSON mode only.
+</ParamField>
+
+<ParamField path="-r, --requirement" type="string">
+  Show a specific requirement by 1-based index. JSON mode only.
+</ParamField>
+
+## Examples
+
+```bash
+# Interactive selection
+openspec show
+
+# Show a specific change
+openspec show add-dark-mode
+
+# Show a specific spec
+openspec show auth --type spec
+
+# JSON output for parsing
+openspec show add-dark-mode --json
+```

@@ -1,0 +1,63 @@
+---
+title: "/opsx:archive"
+description: "Archive a completed change. Finalizes the change and moves it to the archive folder."
+---
+
+## What it does
+
+`/opsx:archive` completes a change by validating its artifacts, optionally syncing delta specs to the main specs directory, and moving the change folder to a dated archive location. All artifacts are preserved for audit trail.
+
+## Syntax
+
+```text
+/opsx:archive [change-name]
+```
+
+## Arguments
+
+<ParamField path="change-name" type="string">
+  Which change to archive. If not provided, inferred from the current conversation context.
+</ParamField>
+
+## What it does
+
+- Checks artifact completion status
+- Checks task completion (warns if incomplete)
+- Offers to sync delta specs if not already synced
+- Moves change folder to `openspec/changes/archive/YYYY-MM-DD-<name>/`
+- Preserves all artifacts for audit trail
+
+## Example
+
+```text
+You: /opsx:archive
+
+AI:  Archiving add-dark-mode...
+
+     Artifact status:
+     ✓ proposal.md exists
+     ✓ specs/ exists
+     ✓ design.md exists
+     ✓ tasks.md exists (8/8 tasks complete)
+
+     Delta specs: Not yet synced
+     → Sync now? (recommended)
+
+You: Yes
+
+AI:  ✓ Synced specs to openspec/specs/ui/spec.md
+     ✓ Moved to openspec/changes/archive/2025-01-24-add-dark-mode/
+
+     Change archived successfully.
+```
+
+## Tips
+
+<Tip>
+  Run `/opsx:verify` before archiving to catch implementation mismatches early. Warnings from verify don't block archive, but they surface issues worth addressing.
+</Tip>
+
+- Archive will warn if tasks are incomplete, but won't block
+- Delta specs can be synced during archive or beforehand with `/opsx:sync`
+- Archived changes are preserved for history — nothing is deleted
+- The archive folder name includes the date for chronological ordering

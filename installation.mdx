@@ -1,0 +1,85 @@
+---
+title: "Installation"
+description: "Install OpenSpec via npm, pnpm, yarn, bun, or Nix. Requires Node.js 20.19.0 or higher."
+---
+
+## Prerequisites
+
+OpenSpec requires **Node.js 20.19.0 or higher**. Check your current version:
+
+```bash
+node --version
+```
+
+## Package managers
+
+Install OpenSpec globally using your preferred package manager:
+
+<CodeGroup>
+
+```bash npm
+npm install -g @fission-ai/openspec@latest
+```
+
+```bash pnpm
+pnpm add -g @fission-ai/openspec@latest
+```
+
+```bash yarn
+yarn global add @fission-ai/openspec@latest
+```
+
+```bash bun
+bun add -g @fission-ai/openspec@latest
+```
+
+</CodeGroup>
+
+## Nix
+
+OpenSpec supports three Nix installation paths depending on your workflow.
+
+**Run without installing:**
+
+```bash
+nix run github:Fission-AI/OpenSpec -- init
+```
+
+**Install to your profile:**
+
+```bash
+nix profile install github:Fission-AI/OpenSpec
+```
+
+**Add to a development environment in `flake.nix`:**
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    openspec.url = "github:Fission-AI/OpenSpec";
+  };
+
+  outputs = { nixpkgs, openspec, ... }: {
+    devShells.x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
+      buildInputs = [ openspec.packages.x86_64-linux.default ];
+    };
+  };
+}
+```
+
+## Verify installation
+
+Confirm OpenSpec is installed and accessible:
+
+```bash
+openspec --version
+```
+
+## Next steps
+
+<CardGroup cols={1}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Initialize OpenSpec in your project and run your first change in under 5 minutes.
+  </Card>
+</CardGroup>

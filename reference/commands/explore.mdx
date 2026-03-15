@@ -1,0 +1,67 @@
+---
+title: "/opsx:explore"
+description: "Think through ideas, investigate problems, and clarify requirements before committing to a change."
+---
+
+## What it does
+
+`/opsx:explore` opens a free-form investigation session. It is designed for situations where requirements are unclear, you need to understand the codebase before deciding on an approach, or you want to compare options before committing to a change.
+
+No artifacts are created during exploration. When you're ready to act on what you've learned, you can transition directly to `/opsx:propose` (default `core` profile) or `/opsx:new` (expanded workflow).
+
+## Syntax
+
+```text
+/opsx:explore [topic]
+```
+
+## Arguments
+
+<ParamField path="topic" type="string">
+  What you want to explore or investigate. If not provided, the AI will ask what you'd like to explore.
+</ParamField>
+
+## What it does
+
+- Opens an exploratory conversation with no structure required
+- Investigates the codebase to answer questions
+- Compares options and approaches
+- Creates visual diagrams to clarify thinking
+- Can transition to `/opsx:propose` (default) or `/opsx:new` (expanded workflow) when insights crystallize
+
+## Example
+
+```text
+You: /opsx:explore
+
+AI:  What would you like to explore?
+
+You: How should we handle authentication for the mobile app?
+
+AI:  Let me investigate your current auth setup...
+     [Analyzes codebase]
+
+     I see you're using session-based auth for the web app.
+     For mobile, we have three main options:
+
+     1. JWT tokens (stateless, works offline)
+     2. OAuth2 (if you need third-party login)
+     3. Extend current sessions (simpler, but requires connectivity)
+
+     Your API already has CORS configured. Which direction interests you?
+
+You: Let's go with JWT. Can we start a change for that?
+
+AI:  Ready when you are. Run /opsx:propose add-jwt-auth to begin.
+```
+
+## Tips
+
+<Tip>
+  Use `/opsx:explore` before creating a change whenever requirements are unclear or you're unsure which approach to take. Exploration clarifies thinking before you create artifacts.
+</Tip>
+
+- No artifacts are created during exploration — it is a safe space to think
+- Good for comparing multiple approaches before deciding
+- Can read files and search the codebase freely
+- Works well for performance investigation, debugging, and architectural decisions

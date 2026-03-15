@@ -1,0 +1,61 @@
+---
+title: "/opsx:apply"
+description: "Implement tasks from the change. Works through the task list, writing code and checking off items."
+---
+
+## What it does
+
+`/opsx:apply` reads the `tasks.md` file in a change folder and implements each task in order. It writes code, creates files, and runs tests as needed, marking tasks complete with checkboxes as it goes. If interrupted, it can resume from where it left off.
+
+## Syntax
+
+```text
+/opsx:apply [change-name]
+```
+
+## Arguments
+
+<ParamField path="change-name" type="string">
+  Which change to implement. If not provided, inferred from the current conversation context. Specify explicitly when working on parallel changes.
+</ParamField>
+
+## What it does
+
+- Reads `tasks.md` and identifies incomplete tasks
+- Works through tasks one by one
+- Writes code, creates files, runs tests as needed
+- Marks tasks complete with checkboxes `[x]`
+
+## Example
+
+```text
+You: /opsx:apply
+
+AI:  Implementing add-dark-mode...
+
+     Reading tasks.md:
+     - [ ] 1.1 Create ThemeContext
+     - [ ] 1.2 Add CSS custom properties
+     - [ ] 1.3 Implement localStorage persistence
+
+     Working on 1.1: Create ThemeContext...
+     [Creates src/context/ThemeContext.tsx]
+
+     ✓ 1.1 Complete
+
+     Working on 1.2: Add CSS custom properties...
+     [Updates src/styles/globals.css]
+
+     ✓ 1.2 Complete
+     ...
+```
+
+## Tips
+
+<Tip>
+  Completion state is tracked in `tasks.md` checkboxes, so you can safely interrupt and resume. Run `/opsx:apply` again and it will pick up where it left off.
+</Tip>
+
+- Specify the change name explicitly when working on parallel changes: `/opsx:apply add-dark-mode`
+- Run `/opsx:verify` after apply to validate implementation matches your artifacts
+- You can edit `tasks.md` between sessions to add, remove, or reorder tasks

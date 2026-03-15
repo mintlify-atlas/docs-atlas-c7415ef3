@@ -1,0 +1,149 @@
+---
+title: "Changes"
+description: "Changes are proposed modifications to your system, packaged as self-contained folders with all related artifacts."
+---
+
+A change is a proposed modification to your system, packaged as a folder with everything needed to understand and implement it.
+
+## Change folder structure
+
+```text
+openspec/changes/add-dark-mode/
+├── proposal.md           # Why and what
+├── design.md             # How (technical approach)
+├── tasks.md              # Implementation checklist
+├── .openspec.yaml        # Change metadata (optional)
+└── specs/                # Delta specs
+    └── ui/
+        └── spec.md       # What's changing in ui/spec.md
+```
+
+Each change contains:
+
+- **Artifacts** — documents that capture intent, design, and tasks
+- **Delta specs** — specifications for what's being added, modified, or removed
+- **Metadata** — optional configuration for this specific change
+
+## Why changes are folders
+
+Packaging a change as a folder has several benefits:
+
+1. **Everything together.** Proposal, design, tasks, and specs live in one place. No hunting through different locations.
+2. **Parallel work.** Multiple changes can exist simultaneously without conflicting. Work on `add-dark-mode` while `fix-auth-bug` is also in progress.
+3. **Clean history.** When archived, changes move to `changes/archive/` with their full context preserved. You can look back and understand not just what changed, but why.
+4. **Review-friendly.** A change folder is easy to review — open it, read the proposal, check the design, see the spec deltas.
+
+## Delta specs
+
+Delta specs describe **what's changing** relative to the current specs. They use three sections to indicate the type of change.
+
+### The format
+
+```markdown
+# Delta for Auth
+
+## ADDED Requirements
+
+### Requirement: Two-Factor Authentication
+The system MUST support TOTP-based two-factor authentication.
+
+#### Scenario: 2FA enrollment
+- GIVEN a user without 2FA enabled
+- WHEN the user enables 2FA in settings
+- THEN a QR code is displayed for authenticator app setup
+- AND the user must verify with a code before activation
+
+#### Scenario: 2FA login
+- GIVEN a user with 2FA enabled
+- WHEN the user submits valid credentials
+- THEN an OTP challenge is presented
+- AND login completes only after valid OTP
+
+## MODIFIED Requirements
+
+### Requirement: Session Expiration
+The system MUST expire sessions after 15 minutes of inactivity.
+(Previously: 30 minutes)
+
+#### Scenario: Idle timeout
+- GIVEN an authenticated session
+- WHEN 15 minutes pass without activity
+- THEN the session is invalidated
+
+## REMOVED Requirements
+
+### Requirement: Remember Me
+(Deprecated in favor of 2FA. Users should re-authenticate each session.)
+```
+
+### Delta sections
+
+| Section | Meaning | What happens on archive |
+|---|---|---|
+| `## ADDED Requirements` | New behavior | Appended to main spec |
+| `## MODIFIED Requirements` | Changed behavior | Replaces existing requirement |
+| `## REMOVED Requirements` | Deprecated behavior | Deleted from main spec |
+
+### Why deltas instead of full specs
+
+**Clarity.** A delta shows exactly what's changing. Reading a full spec, you'd have to diff it mentally against the current version.
+
+**Conflict avoidance.** Two changes can touch the same spec file without conflicting, as long as they modify different requirements.
+
+**Review efficiency.** Reviewers see the change, not the unchanged context. Focus on what matters.
+
+**Brownfield fit.** Most work modifies existing behavior. Deltas make modifications first-class, not an afterthought.
+
+## The archive lifecycle
+
+Archiving completes a change by merging its delta specs into the main specs and preserving the change for history.
+
+```text
+Before archive:
+
+openspec/
+├── specs/
+│   └── auth/
+│       └── spec.md ◄────────────────┐
+└── changes/                         │
+    └── add-2fa/                     │
+        ├── proposal.md              │
+        ├── design.md                │ merge
+        ├── tasks.md                 │
+        └── specs/                   │
+            └── auth/                │
+                └── spec.md ─────────┘
+
+
+After archive:
+
+openspec/
+├── specs/
+│   └── auth/
+│       └── spec.md        # Now includes 2FA requirements
+└── changes/
+    └── archive/
+        └── 2025-01-24-add-2fa/    # Preserved for history
+            ├── proposal.md
+            ├── design.md
+            ├── tasks.md
+            └── specs/
+                └── auth/
+                    └── spec.md
+```
+
+<Steps>
+  <Step title="Merge deltas">
+    Each delta spec section (ADDED/MODIFIED/REMOVED) is applied to the corresponding main spec.
+  </Step>
+  <Step title="Move to archive">
+    The change folder moves to `changes/archive/` with a date prefix for chronological ordering.
+  </Step>
+  <Step title="Preserve context">
+    All artifacts remain intact in the archive. You can always look back to understand why a change was made.
+  </Step>
+</Steps>
+
+<Note>
+  Active changes (`changes/`) show only work in progress. Completed work moves out of the way, keeping your workspace clean while the archive preserves the full audit trail.
+</Note>

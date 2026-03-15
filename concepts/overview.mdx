@@ -1,0 +1,94 @@
+---
+title: "How OpenSpec Works"
+description: "Understand the core model: specs, changes, artifacts, and the archive lifecycle."
+---
+
+OpenSpec organizes your work into two main areas: a **source of truth** that describes how your system currently behaves, and **proposed changes** that package everything needed to understand and implement a modification.
+
+## The big picture
+
+```text
+┌─────────────────────────────────────────────────────────────────┐
+│                        openspec/                                 │
+│                                                                  │
+│   ┌─────────────────────┐      ┌──────────────────────────────┐ │
+│   │       specs/        │      │         changes/              │ │
+│   │                     │      │                               │ │
+│   │  Source of truth    │◄─────│  Proposed modifications       │ │
+│   │  How your system    │ merge│  Each change = one folder     │ │
+│   │  currently works    │      │  Contains artifacts + deltas  │ │
+│   │                     │      │                               │ │
+│   └─────────────────────┘      └──────────────────────────────┘ │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**`openspec/specs/`** is the source of truth — it describes how your system currently behaves, organized by domain.
+
+**`openspec/changes/`** holds proposed modifications. Each change lives in its own folder until you're ready to merge it. You can work on multiple changes in parallel without conflicts, review a change before it affects the main specs, and then archive it when complete.
+
+## The virtuous cycle
+
+```text
+1. Specs describe current behavior
+2. Changes propose modifications (as deltas)
+3. Implementation makes the changes real
+4. Archive merges deltas into specs
+5. Specs now describe the new behavior
+6. Next change builds on updated specs
+```
+
+This separation keeps your source of truth clean. Active changes show only work in progress. Completed work moves to `changes/archive/` with full context preserved.
+
+## The full flow
+
+```text
+┌────────────────┐
+│  1. START      │  /opsx:propose (core) or /opsx:new (expanded)
+│     CHANGE     │
+└───────┬────────┘
+        │
+        ▼
+┌────────────────┐
+│  2. CREATE     │  /opsx:ff or /opsx:continue (expanded workflow)
+│     ARTIFACTS  │  Creates proposal → specs → design → tasks
+│                │  (based on schema dependencies)
+└───────┬────────┘
+        │
+        ▼
+┌────────────────┐
+│  3. IMPLEMENT  │  /opsx:apply
+│     TASKS      │  Work through tasks, checking them off
+│                │◄──── Update artifacts as you learn
+└───────┬────────┘
+        │
+        ▼
+┌────────────────┐
+│  4. VERIFY     │  /opsx:verify (optional)
+│     WORK       │  Check implementation matches specs
+└───────┬────────┘
+        │
+        ▼
+┌────────────────┐     ┌──────────────────────────────────────────┐
+│  5. ARCHIVE    │────►│  Delta specs merge into main specs        │
+│     CHANGE     │     │  Change folder moves to archive/          │
+└────────────────┘     │  Specs are now the updated source of truth│
+                       └──────────────────────────────────────────┘
+```
+
+## Core concepts
+
+<Columns cols={2}>
+  <Card title="Specs" icon="file-lines" href="/concepts/specs">
+    Structured requirements and scenarios describing how your system behaves. The source of truth.
+  </Card>
+  <Card title="Changes" icon="folder-open" href="/concepts/changes">
+    Proposed modifications packaged as self-contained folders with all related artifacts and delta specs.
+  </Card>
+  <Card title="Artifacts" icon="layer-group" href="/concepts/artifacts">
+    The documents within a change — proposal, specs, design, and tasks — that guide planning and implementation.
+  </Card>
+  <Card title="Schemas" icon="diagram-project" href="/concepts/schemas">
+    Artifact types and their dependency graph. Defines the workflow for a change.
+  </Card>
+</Columns>

@@ -1,0 +1,53 @@
+---
+title: "/opsx:ff"
+description: "Fast-forward through artifact creation. Creates all planning artifacts at once."
+---
+
+## What it does
+
+`/opsx:ff` creates all planning artifacts for a change in dependency order, without pausing for review between each one. It tracks progress via a todo list and stops when all `apply-required` artifacts are complete. Use it when you have a clear picture of the work and want to move quickly.
+
+## Syntax
+
+```text
+/opsx:ff [change-name]
+```
+
+## Arguments
+
+<ParamField path="change-name" type="string">
+  Which change to fast-forward. If not provided, inferred from the current conversation context.
+</ParamField>
+
+## What it does
+
+- Creates all artifacts in dependency order
+- Tracks progress via todo list
+- Stops when all `apply-required` artifacts are complete
+- Reads each dependency before creating the next artifact
+
+## Example
+
+```text
+You: /opsx:ff add-dark-mode
+
+AI:  Fast-forwarding add-dark-mode...
+
+     ✓ Creating proposal.md
+     ✓ Creating specs/ui/spec.md
+     ✓ Creating design.md
+     ✓ Creating tasks.md
+
+     All planning artifacts complete!
+     Ready for implementation. Run /opsx:apply to begin.
+```
+
+## Tips
+
+<Tip>
+  If you are unsure about scope or want to refine the proposal before generating specs, use `/opsx:continue` instead — it pauses after each artifact so you can review and edit.
+</Tip>
+
+- You can still edit any artifact after `/opsx:ff` completes, before running `/opsx:apply`
+- Good for small to medium features with well-understood requirements
+- Faster than running `/opsx:continue` multiple times
